@@ -90,6 +90,8 @@ ControlScope.prototype.accept = function(type, opts, callback) {
 };
 
 ControlScope.prototype.define = function(type, creator, opts) {
+    var scope = this;
+    
     // ensure we have options
     opts = opts || {};
     
@@ -97,6 +99,12 @@ ControlScope.prototype.define = function(type, creator, opts) {
     this.definitions[type] = {
         creator: creator,
         singleton: opts.singleton
+    };
+    
+    return {
+        create: function() {
+            return this.get(type);
+        }
     };
 };
 

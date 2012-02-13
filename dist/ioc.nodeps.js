@@ -91,6 +91,8 @@ var IoC = (function() {
     };
     
     ControlScope.prototype.define = function(type, creator, opts) {
+        var scope = this;
+        
         // ensure we have options
         opts = opts || {};
         
@@ -98,6 +100,12 @@ var IoC = (function() {
         this.definitions[type] = {
             creator: creator,
             singleton: opts.singleton
+        };
+        
+        return {
+            create: function() {
+                return this.get(type);
+            }
         };
     };
     
