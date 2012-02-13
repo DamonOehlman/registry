@@ -103,7 +103,7 @@ ControlScope.prototype.define = function(type, creator, opts) {
     
     return {
         create: function() {
-            return this.get(type);
+            return scope.get(type);
         }
     };
 };

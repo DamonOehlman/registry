@@ -36,4 +36,12 @@ describe('core tests', function() {
         expect(typeof ponger).to.equal('object');
         expect(ponger.ping()).to.equal('pong');
     });
+    
+    it('can define and create a module', function() {
+        var test = IoC.define('test2', function() { 
+            return 'test2';
+        }).create();
+        
+        expect(test).to.equal('test2');
+    });
 });

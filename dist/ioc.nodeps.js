@@ -104,7 +104,7 @@ var IoC = (function() {
         
         return {
             create: function() {
-                return this.get(type);
+                return scope.get(type);
             }
         };
     };
