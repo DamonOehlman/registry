@@ -359,6 +359,47 @@ var IoC = (function() {
         return newInstance;
     };
     
+    ControlScope.prototype.accept = function(type, opts, callback) {
+        if (typeof opts == 'function') {
+            callback = opts;
+            opts = {};
+        }
+        
+        // ensure we have opts
+        opts = opts || {};
+        
+        // if we have no callback, return
+        if (! callback) {
+            return {};
+        }
+        
+        // if the caller wants existing matching types then provide instances
+        if (typeof opts.existing == 'undefined' || opts.existing) {
+            var instances = [],
+                reTypeMatch = new RegExp('^' + type.replace(/\./g, '\\.'));
+                
+            for (var key in this.instances) {
+                if (reTypeMatch.test(key)) {
+                    instances = instances.concat(this.instances[key]);
+                }
+            }
+            
+            // pass the existing instances to the callback
+            for (var ii = 0, count = instances.length; ii < count; ii++) {
+                callback(instances[ii]);
+            }
+        }
+        
+        // when new instances are created 
+        eve.on(this.ns + 'create.' + type, callback);
+    
+        return {
+            stop: function() {
+                eve.unbind(this.ns + 'create.' + type, callback);
+            }
+        };
+    };
+    
     ControlScope.prototype.define = function(type, creator, opts) {
         // ensure we have options
         opts = opts || {};
