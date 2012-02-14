@@ -55,4 +55,27 @@ describe('core tests', function() {
         
         expect(test).to.equal('test2');
     });
+    
+    it('can get the existing types defined', function(done) {
+        IoC.accept('pingpong', { definition: true }, function(object) {
+            expect(object).to.exist;
+            expect(object.creator).to.exist;
+            
+            done();
+        });
+    });
+    
+    it('can get the existing instances defined', function(done) {
+        var expected = 3;
+        
+        IoC.accept('pingpong', function(object) {
+            expect(object).to.exist;
+            expect(typeof object.ping).to.equal('function');
+            
+            expected -= 1;
+            if (expected <= 0) {
+                done();
+            }
+        });
+    });
 });

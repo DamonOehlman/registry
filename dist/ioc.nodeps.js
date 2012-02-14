@@ -18,7 +18,7 @@ var IoC = (function() {
     
     ControlScope.prototype._create = function() {
         var targetName = eve.nt().slice((this.ns + 'get.').length),
-            def = this._findDefinition(targetName),
+            def = this._findDefinitions(targetName)[0],
             args = Array.prototype.slice.call(arguments),
             instances, newInstance;
             
@@ -56,21 +56,25 @@ var IoC = (function() {
         return newInstance;
     };
     
-    ControlScope.prototype._findDefinition = function(targetName) {
+    ControlScope.prototype._findDefinitions = function(targetName) {
         // create the regex
-        var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\.)'), key;
+        var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\.)'), 
+            key, matches = [];
         
         // iterate through the definitions and look for a regex match
         for (key in this.definitions) {
             if (reMatchingDef.test(key)) {
-                return this.definitions[key];
+                matches[matches.length] = this.definitions[key];
             }
         }
         
-        return undefined;
+        return matches;
     };
     
     ControlScope.prototype.accept = function(type, opts, callback) {
+        var evtName = this.ns + 'create.' + type,
+            getExisting, existing = [];
+        
         if (typeof opts == 'function') {
             callback = opts;
             opts = {};
@@ -84,35 +88,39 @@ var IoC = (function() {
             return {};
         }
         
-        // if the caller wants existing matching types then provide instances
-        if (typeof opts.existing == 'undefined' || opts.existing) {
-            var instances = [],
-                reTypeMatch = new RegExp('^' + type.replace(/\./g, '\\.'));
-                
+        // if we are looking for definitions, then find the definitions
+        getExisting = typeof opts.existing == 'undefined' || opts.existing;
+        if (getExisting && opts.definition) {
+            existing = this._findDefinitions(type);
+        }
+        // otherwise, find the instances
+        else if (getExisting) {
+            var reTypeMatch = new RegExp('^' + type.replace(/\./g, '\\.'));
+    
             for (var key in this.instances) {
                 if (reTypeMatch.test(key)) {
-                    instances = instances.concat(this.instances[key]);
+                    existing = existing.concat(this.instances[key]);
                 }
-            }
-            
-            // pass the existing instances to the callback
-            for (var ii = 0, count = instances.length; ii < count; ii++) {
-                callback(instances[ii]);
             }
         }
         
+        // fire the callback for existing instances / definitions
+        for (var ii = 0, count = existing.length; ii < count; ii++) {
+            callback(existing[ii]);
+        }
+        
         // when new instances are created 
-        eve.on(this.ns + 'create.' + type, callback);
+        eve.on(evtName, callback);
     
         return {
             stop: function() {
-                eve.unbind(this.ns + 'create.' + type, callback);
+                eve.unbind(evtName, callback);
             }
         };
     };
     
     ControlScope.prototype.define = function(type, opts, creator) {
-        var scope = this;
+        var scope = this, def;
         
         // handle the normal case where options are omitted
         if (arguments.length <= 2) {
@@ -124,11 +132,15 @@ var IoC = (function() {
         opts = opts || {};
         
         // define the constructors
-        this.definitions[type] = {
+        def = this.definitions[type] = {
             type: type,
             creator: creator,
             singleton: opts.singleton
         };
+        
+        
+        // fire the define event
+        eve(this.ns + 'define.' + type, def);
         
         return {
             create: function() {
