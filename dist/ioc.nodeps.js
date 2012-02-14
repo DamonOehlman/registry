@@ -150,6 +150,21 @@ var IoC = (function() {
     ControlScope.prototype.getInstance = function(type) {
         return eve.apply(eve, [this.ns + 'get.' + type, this].concat(Array.prototype.slice.call(arguments)))[0];
     };
+    
+    ControlScope.prototype.singleton = function(type, opts, creator) {
+        // handle the normal case where options are omitted
+        if (arguments.length <= 2) {
+            creator = opts;
+            opts = {};
+        }
+    
+        // initialise opts
+        opts = opts || {};
+        opts.singleton = true;
+        
+        // define a singleton
+        this.define(type, opts, creator);
+    };
 
     
     return new ControlScope();
