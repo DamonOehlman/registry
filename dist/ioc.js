@@ -330,13 +330,20 @@ var IoC = (function() {
     ControlScope.prototype._create = function() {
         var targetName = eve.nt().slice((this.ns + 'get.').length),
             def = this._findDefinition(targetName),
-            instances = def ? this.instances[def.type] : null,
             args = Array.prototype.slice.call(arguments),
-            newInstance;
+            instances, newInstance;
+            
+        // if we do not have a definition return undefined
+        if (! def) {
+            return undefined;
+        }
+        else {
+            instances = this.instances[def.type];
+        }
         
         // ensure we have the instances array
         if (! instances) {
-            instances = this.instances[targetName] = [];
+            instances = this.instances[def.type] = [];
         }
         
         // if we have the def, then check whether the type is a singleton instance
@@ -352,7 +359,7 @@ var IoC = (function() {
             }
             
             if (newInstance) {
-                eve(this.ns + 'create.' + targetName, this, newInstance);
+                eve(this.ns + 'create.' + def.type, this, newInstance);
                 instances[instances.length] = newInstance;
             }
         }
