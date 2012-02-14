@@ -135,18 +135,16 @@ var IoC = (function() {
         def = this.definitions[type] = {
             type: type,
             creator: creator,
-            singleton: opts.singleton
-        };
-        
-        
-        // fire the define event
-        eve(this.ns + 'define.' + type, def);
-        
-        return {
+            singleton: opts.singleton,
+            
             create: function() {
                 return scope.getInstance(type);
             }
         };
+        
+        // fire the define event
+        eve(this.ns + 'define.' + type, def);
+        return def;
     };
     
     ControlScope.prototype.getInstance = function(type) {
