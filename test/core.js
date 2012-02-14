@@ -8,6 +8,12 @@ PingPong.prototype.ping = function() {
     return 'pong';
 };
 
+function checkPonger(ponger) {
+    expect(ponger).to.exist;
+    expect(typeof ponger).to.equal('object');
+    expect(ponger.ping()).to.equal('pong');
+}
+
 describe('core tests', function() {
     it('can find the IoC global object', function() {
         expect(IoC).to.exist;
@@ -27,14 +33,19 @@ describe('core tests', function() {
     });
     
     it('can define a module based on a prototype', function() {
-        IoC.define('pingpong', PingPong.prototype);
+        IoC.define('pingpong.type1', PingPong.prototype);
     });
     
     it('can create a new pingpong object', function() {
-        var ponger = IoC.get('pingpong');
-        expect(ponger).to.exist;
-        expect(typeof ponger).to.equal('object');
-        expect(ponger.ping()).to.equal('pong');
+        checkPonger(IoC.get('pingpong.type1'));
+    });
+    
+    it('can create a new pingpong object by looking for the generic implementation', function() {
+        checkPonger(IoC.get('pingpong'));
+    });
+    
+    it('can create a new pingpong object using the general implementation (with wildcards)', function() {
+        checkPonger(IoC.get('pingpong.*'));
     });
     
     it('can define and create a module', function() {

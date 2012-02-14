@@ -308,6 +308,7 @@
 })(this);
 
 
+
 var IoC = (function() {
     function ControlScope(ns) {
         var scope = this;
@@ -316,7 +317,7 @@ var IoC = (function() {
         ns = ns || '';
         
         // initialise members
-        this.ns = ns ? ns + '.' : '';
+        this.ns = 'ioc.' + (ns ? ns + '.' : '');
         this.definitions = {};
         this.instances = {};
         
@@ -328,8 +329,8 @@ var IoC = (function() {
     
     ControlScope.prototype._create = function() {
         var targetName = eve.nt().slice((this.ns + 'get.').length),
-            def = this.definitions[targetName],
-            instances = this.instances[targetName],
+            def = this._findDefinition(targetName),
+            instances = def ? this.instances[def.type] : null,
             args = Array.prototype.slice.call(arguments),
             newInstance;
         
@@ -357,6 +358,20 @@ var IoC = (function() {
         }
         
         return newInstance;
+    };
+    
+    ControlScope.prototype._findDefinition = function(targetName) {
+        // create the regex
+        var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\.)'), key;
+        
+        // iterate through the definitions and look for a regex match
+        for (key in this.definitions) {
+            if (reMatchingDef.test(key)) {
+                return this.definitions[key];
+            }
+        }
+        
+        return undefined;
     };
     
     ControlScope.prototype.accept = function(type, opts, callback) {
@@ -408,6 +423,7 @@ var IoC = (function() {
         
         // define the constructors
         this.definitions[type] = {
+            type: type,
             creator: creator,
             singleton: opts.singleton
         };
