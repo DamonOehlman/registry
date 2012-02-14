@@ -103,8 +103,14 @@ ControlScope.prototype.accept = function(type, opts, callback) {
     };
 };
 
-ControlScope.prototype.define = function(type, creator, opts) {
+ControlScope.prototype.define = function(type, opts, creator) {
     var scope = this;
+    
+    // handle the normal case where options are omitted
+    if (typeof opts == 'function' && arguments.length <= 2) {
+        creator = opts;
+        opts = {};
+    }
     
     // ensure we have options
     opts = opts || {};
