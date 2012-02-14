@@ -108,7 +108,7 @@ var IoC = (function() {
         var scope = this;
         
         // handle the normal case where options are omitted
-        if (typeof opts == 'function' && arguments.length <= 2) {
+        if (arguments.length <= 2) {
             creator = opts;
             opts = {};
         }
@@ -125,12 +125,12 @@ var IoC = (function() {
         
         return {
             create: function() {
-                return scope.get(type);
+                return scope.getInstance(type);
             }
         };
     };
     
-    ControlScope.prototype.get = function(type) {
+    ControlScope.prototype.getInstance = function(type) {
         return eve.apply(eve, [this.ns + 'get.' + type, this].concat(Array.prototype.slice.call(arguments)))[0];
     };
 

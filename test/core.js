@@ -26,7 +26,7 @@ describe('core tests', function() {
     });
     
     it('can create a new test module', function() {
-        var test = IoC.get('test');
+        var test = IoC.getInstance('test');
         expect(test).to.exist;
         expect(typeof test).to.equal('string');
         expect(test).to.equal('test');
@@ -37,15 +37,15 @@ describe('core tests', function() {
     });
     
     it('can create a new pingpong object', function() {
-        checkPonger(IoC.get('pingpong.type1'));
+        checkPonger(IoC.getInstance('pingpong.type1'));
     });
     
     it('can create a new pingpong object by looking for the generic implementation', function() {
-        checkPonger(IoC.get('pingpong'));
+        checkPonger(IoC.getInstance('pingpong'));
     });
     
     it('can create a new pingpong object using the general implementation (with wildcards)', function() {
-        checkPonger(IoC.get('pingpong.*'));
+        checkPonger(IoC.getInstance('pingpong.*'));
     });
     
     it('can define and create a module', function() {
