@@ -32,6 +32,16 @@ describe('core tests', function() {
         expect(test).to.equal('test');
     });
     
+    it('can get an instance immediatedly after defining', function() {
+        var def = IoC.define('test.another', function() {
+                return 'Another test';
+            }),
+            value = def.getInstance();
+            
+        expect(def).to.exist;
+        expect(value).to.equal('Another test');
+    });
+    
     it('can define a module based on a prototype', function() {
         IoC.define('pingpong.type1', PingPong.prototype);
     });
@@ -46,14 +56,6 @@ describe('core tests', function() {
     
     it('can create a new pingpong object using the general implementation (with wildcards)', function() {
         checkPonger(IoC.getInstance('pingpong.*'));
-    });
-    
-    it('can define and create a module', function() {
-        var test = IoC.define('test2', function() { 
-            return 'test2';
-        }).create();
-        
-        expect(test).to.equal('test2');
     });
     
     it('can get the existing types defined', function(done) {

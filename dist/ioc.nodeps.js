@@ -137,7 +137,7 @@ var IoC = (function() {
             creator: creator,
             singleton: opts.singleton,
             
-            create: function() {
+            getInstance: function() {
                 return scope.getInstance(type);
             }
         };
