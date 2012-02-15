@@ -80,4 +80,10 @@ describe('core tests', function() {
             }
         });
     });
+    
+    it('can get all the instances for a particular type', function() {
+        var instances = IoC.instances('test');
+        expect(instances).to.exist;
+        expect(instances.length).to.equal(2);
+    });
 });
