@@ -23,7 +23,7 @@ ControlScope.prototype._create = function(type, allowCreate) {
        
     // for each of the definitions matching the targetName, attempt to create 
     // and required objects
-    _.each(this._findDefinitions(targetName), function(def) {
+    _.each(this._find(this._definitions, targetName), function(def) {
         var instances = scope._instances[def.type],
             requireCreate;
         
@@ -59,32 +59,19 @@ ControlScope.prototype._create = function(type, allowCreate) {
     return allInstances;
 };
 
-ControlScope.prototype._findDefinitions = function(targetName) {
+ControlScope.prototype._find = function(collection, targetName) {
     // create the regex
     var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\.)'), 
         key, matches = [];
     
     // iterate through the definitions and look for a regex match
-    for (key in this._definitions) {
+    for (key in collection) {
         if (reMatchingDef.test(key)) {
-            matches[matches.length] = this._definitions[key];
+            matches[matches.length] = collection[key];
         }
     }
     
     return matches;
-};
-
-ControlScope.prototype._findInstances = function(targetName) {
-    var reTypeMatch = new RegExp('^' + targetName.replace(/\./g, '\\.')),
-        existing = [];
-
-    for (var key in this._instances) {
-        if (reTypeMatch.test(key)) {
-            existing = existing.concat(this._instances[key]);
-        }
-    }
-    
-    return existing;
 };
 
 ControlScope.prototype.accept = function(type, opts, callback) {
@@ -109,11 +96,11 @@ ControlScope.prototype.accept = function(type, opts, callback) {
     // if we are looking for definitions, then find the definitions
     getExisting = typeof opts.existing == 'undefined' || opts.existing;
     if (getExisting && opts.definition) {
-        existing = this._findDefinitions(type);
+        existing = this._find(this._definitions, type);
     }
     // otherwise, find the instances
     else if (getExisting) {
-        existing = this._findInstances(type);
+        existing = _.flatten(this._find(this._instances, type));
     }
     
     // fire the callback for existing instances / definitions
