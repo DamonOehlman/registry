@@ -62,7 +62,7 @@ var IoC = (function() {
     
     ControlScope.prototype._find = function(collection, targetName) {
         // create the regex
-        var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\.)'), 
+        var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\\.)'), 
             key, matches = [];
         
         // iterate through the definitions and look for a regex match

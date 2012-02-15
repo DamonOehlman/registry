@@ -86,4 +86,10 @@ describe('core tests', function() {
         expect(instances).to.exist;
         expect(instances.length).to.equal(2);
     });
+    
+    it('doesn\'t find instances of a partial match', function() {
+        var instances = IoC.instances('ping');
+        expect(instances).to.exist;
+        expect(instances.length).to.equal(0);
+    });
 });
