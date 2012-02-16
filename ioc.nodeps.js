@@ -1,4 +1,7 @@
 var IoC = (function() {
+    var reAttributes = /^(.*)\[(.*)\]$/,
+        reAttr = /^(\+)?(\w+)\=?(.*)$/;
+    
     function ControlScope(ns) {
         var scope = this;
         
@@ -16,7 +19,7 @@ var IoC = (function() {
         });
     }
     
-    ControlScope.prototype._create = function(type, allowCreate) {
+    ControlScope.prototype._create = function(type, query, allowCreate) {
         var scope = this,
             targetName = eve.nt().slice((this._ns + 'get.').length),
             args = Array.prototype.slice.call(arguments),
@@ -24,7 +27,7 @@ var IoC = (function() {
            
         // for each of the definitions matching the targetName, attempt to create 
         // and required objects
-        _.each(this._find(this._definitions, targetName), function(def) {
+        _.each(this._find(this._definitions, targetName, query), function(def) {
             var instances = scope._instances[def.type],
                 requireCreate;
             
@@ -60,7 +63,32 @@ var IoC = (function() {
         return allInstances;
     };
     
-    ControlScope.prototype._find = function(collection, targetName) {
+    ControlScope.prototype._extractAttributes = function(type, creator, attributes) {
+        // strip attributes from the type definition
+        if (reAttributes.test(type)) {
+            type = RegExp.$1;
+            _.each(RegExp.$2.split(/[\,\s]\s*/), function(attribute) {
+                var match = reAttr.exec(attribute);
+                if (match) {
+                    attributes[match[2]] = parseFloat(match[3]) || match[3] || true;
+                }
+            });
+        }
+        
+        // if the creator is defined and has a contructor, then we have a prototype
+        // let's map simple types on the prototype to attributes
+        if (creator && creator.constructor) {
+            for (var key in creator) {
+                if (typeof creator[key] != 'function') {
+                    attributes[key] = creator[key];
+                }
+            }
+        }
+        
+        return type;
+    };
+    
+    ControlScope.prototype._find = function(collection, targetName, query) {
         // create the regex
         var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\\.)'), 
             key, matches = [];
@@ -70,6 +98,14 @@ var IoC = (function() {
             if (reMatchingDef.test(key)) {
                 matches[matches.length] = collection[key];
             }
+        }
+    
+        // if we are working with the definitions collection and we have a query, then filter the results
+        if (collection === this._definitions && query) {
+            matches = _.filter(matches, function(match) {
+                // TODO: filter based on query
+                return true;
+            });
         }
         
         return matches;
@@ -120,7 +156,8 @@ var IoC = (function() {
     };
     
     ControlScope.prototype.define = function(type, opts, creator) {
-        var scope = this, def;
+        var scope = this, def,
+            attributes = {};
         
         // handle the normal case where options are omitted
         if (arguments.length <= 2) {
@@ -130,12 +167,17 @@ var IoC = (function() {
         
         // ensure we have options
         opts = opts || {};
+    
+        // extract the attributes
+        type = this._extractAttributes(type, creator, attributes);
         
         // define the constructors
         def = this._definitions[type] = {
             type: type,
-            creator: creator,
+            attributes: attributes,
             singleton: opts.singleton,
+    
+            creator: creator,
             
             getInstance: function() {
                 return scope.getInstance(type);
@@ -147,11 +189,11 @@ var IoC = (function() {
         return def;
     };
     
-    ControlScope.prototype.getInstance = function(type) {
-        return this.instances(type, true)[0];
+    ControlScope.prototype.getInstance = function(type, query) {
+        return this.instances(type, query, true)[0];
     };
     
-    ControlScope.prototype.instances = function(type, allowCreate) {
+    ControlScope.prototype.instances = function(type, query, allowCreate) {
         // find the instances for the ping ping classes
         return _.flatten(eve.apply(
             eve, 

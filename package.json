@@ -1,0 +1,25 @@
+{
+  "name": "IoC",
+  "description": "Experimental namespaced IoC container",
+  "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
+  "tags": [ "ioc" ],
+  "version": "0.0.1",
+  "main": "ioc.js",
+  "dependencies": {
+  },
+
+  "devDependencies": {
+    "interleave": "0.1.x",
+    "uglify-js": "*"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sidelab/IoC.git"
+  },
+  "bugs": {
+    "url": "http://github.com/sidelab/IoC/issues"
+  },
+  
+  "contributors": []
+}

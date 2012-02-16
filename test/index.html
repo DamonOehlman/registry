@@ -2,11 +2,11 @@
 <head>
   <meta charset="utf-8">
   <title>Mocha Tests</title>
-  <link rel="stylesheet" href="https://raw.github.com/visionmedia/mocha/master/mocha.css" />
-  <script src="../dist/ioc.js"></script>
+  <link rel="stylesheet" href="lib/mocha.css" />
+  <script src="../ioc.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="https://raw.github.com/logicalparadox/chai/master/chai.js"></script>
-  <script src="https://raw.github.com/visionmedia/mocha/master/mocha.js"></script>
+  <script src="lib/chai.js"></script>
+  <script src="lib/mocha.js"></script>
   <script>mocha.setup('bdd');</script>
   <script>
   var reLastPart = /.*\/(.*)$/;
@@ -17,6 +17,8 @@
   </script>
   <script src="core.js"></script>
   <script src="singleton.js"></script>
+  <script src="attributes.js"></script>
+  <script src="attributes-prototypes.js"></script>
   <script>
     $(function () {
       mocha.run();

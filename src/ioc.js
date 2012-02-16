@@ -1,4 +1,4 @@
-//= github://DmitryBaranovskiy/eve/eve.js
-//= github://documentcloud/underscore/underscore.js
+//= eve!eve.js
+//= underscore!underscore.js
 
 //= ioc.nodeps
