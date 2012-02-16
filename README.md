@@ -6,7 +6,7 @@ This implementation instead uses __purpose-based namespacing__ when defining "cl
 
 For instance, consider the following (contrived) definitions:
 
-```
+```js
 IoC.define('vehicle.humvee[+offroad, topspeed=105]', function() {
     return {
         drive: function(from, to) {
