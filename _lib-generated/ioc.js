@@ -1,4 +1,8 @@
-var IoC = (function() {
+var eve = require('./eve'),
+    _ = require('underscore'),
+    matchme = require('matchme');
+    
+(function(glob) {
     var reAttributes = /^(.*)\[(.*)\]$/,
         reAttr = /^(\+)?(\w+)\=?(.*)$/;
     
@@ -23,7 +27,8 @@ var IoC = (function() {
         var scope = this,
             targetName = eve.nt().slice((this._ns + 'get.').length),
             args = Array.prototype.slice.call(arguments),
-            allInstances = [];
+            allInstances = [],
+            newInstance;
            
         // for each of the definitions matching the targetName, attempt to create 
         // and required objects
@@ -220,5 +225,7 @@ var IoC = (function() {
     };
 
     
-    return new ControlScope();
-})();
+    var IoC = new ControlScope();
+    
+    (typeof module != "undefined" && module.exports) ? (module.exports = IoC) : (typeof define != "undefined" ? (define("IoC", [], function() { return IoC; })) : (glob.IoC = IoC));
+})(this);

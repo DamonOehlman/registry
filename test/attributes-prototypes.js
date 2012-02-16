@@ -1,4 +1,6 @@
-var expect = require('chai').expect;
+var IoC = require('IoC'),
+    expect = require('chai').expect,
+    _ = require('underscore');
 
 function Vehicle() {
     

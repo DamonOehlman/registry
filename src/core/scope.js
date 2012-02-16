@@ -22,7 +22,8 @@ ControlScope.prototype._create = function(type, query, allowCreate) {
     var scope = this,
         targetName = eve.nt().slice((this._ns + 'get.').length),
         args = Array.prototype.slice.call(arguments),
-        allInstances = [];
+        allInstances = [],
+        newInstance;
        
     // for each of the definitions matching the targetName, attempt to create 
     // and required objects

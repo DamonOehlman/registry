@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <title>Mocha Tests</title>
   <link rel="stylesheet" href="lib/mocha.css" />
-  <script src="../ioc.js"></script>
+  <script src="../../ioc.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="lib/chai.js"></script>
   <script src="lib/mocha.js"></script>
@@ -12,13 +12,13 @@
   var reLastPart = /.*\/(.*)$/;
   
   function require(module) {
-      return window[module.replace(reLastPart, '$1')];
+      return window[module.replace('underscore', '_').replace(reLastPart, '$1')];
   }
   </script>
-  <script src="core.js"></script>
-  <script src="singleton.js"></script>
-  <script src="attributes.js"></script>
-  <script src="attributes-prototypes.js"></script>
+  <script src="../core.js"></script>
+  <script src="../singleton.js"></script>
+  <script src="../attributes.js"></script>
+  <script src="../attributes-prototypes.js"></script>
   <script>
     $(function () {
       mocha.run();

@@ -1,4 +1,5 @@
-var expect = require('chai').expect;
+var IoC = require('IoC'),
+    expect = require('chai').expect;
 
 describe('attribute tests', function() {
     it('can define a type with attributes (drivable.humvee)', function() {

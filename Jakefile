@@ -12,17 +12,20 @@ var interleave = require('interleave'),
 
 desc('build the client files');
 task('default', function() {
-    interleave('src', {
+    interleave('src/ioc.js', {
         aliases: aliases,
         path: '.',
         after: ['uglify']
     });
+    
+    interleave('src/node-wrappers', {
+        aliases: aliases,
+        path: '_lib-generated'
+    });
 });
 
 task('build.local', function() {
-    interleave('src', {
-        aliases: aliasesLocal,
-        path: '.',
-        after: ['uglify']
-    });
+    aliases = aliasesLocal;
+    
+    jake.Task['default'].invoke();
 });

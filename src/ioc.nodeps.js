@@ -1,5 +1,7 @@
-var IoC = (function() {
+(function(glob) {
     //= core/scope
     
-    return new ControlScope();
-})();
+    var IoC = new ControlScope();
+    
+    //@export IoC
+})(this);

@@ -1,4 +1,5 @@
-var expect = require('chai').expect;
+var IoC = require('IoC'),
+    expect = require('chai').expect;
 
 describe('singleton tests', function() {
     it('can define a singleton', function() {
