@@ -4,23 +4,10 @@ This is a simple project designed to provide something conceptually similar to I
 
 This implementation instead uses __purpose-based namespacing__ when defining "classes".  What I mean by this is that something should be given a namespace relative to it's purpose rather than it's ownership (as is common in other languages).
 
-For instance, consider the following (contrived) definitions:
+## Example Usage
 
-```js
-IoC.define('vehicle.humvee[+offroad, topspeed=105]', function() {
-    return {
-        drive: function(from, to) {
-        }
-    }
-});
+To be completed.
 
-IoC.define('vehicle.porsche[topspeed=240]', function() {
-    return {
-        drive: function(from, to) {
-        }
-    }
-});
-```
+## Roadmap
 
-
-
+- Integrate [matchme](https://github.com/DamonOehlman/matchme) to allow matching the appropriate object type based on some requirements.
