@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 
 describe('attribute tests', function() {
     it('can define a type with attributes (drivable.humvee)', function() {
-        var def = IoC.define('vehicle.humvee[+offroad, topspeed=105]', function() {
+        var def = IoC.define('vehicle.humvee[offroad, topspeed=105]', function() {
             return {
                 drive: function(from, to) {
                     return 'driving a humvee';
@@ -12,7 +12,7 @@ describe('attribute tests', function() {
         
         expect(def).to.exist;
         expect(def.attributes).to.exist;
-        expect(def.attributes.offroad).to.be.truthy;
+        expect(def.attributes.offroad).to.be.ok;
         expect(def.attributes.topspeed).to.equal(105);
     });
     
@@ -27,13 +27,19 @@ describe('attribute tests', function() {
         
         expect(def).to.exist;
         expect(def.attributes).to.exist;
-        expect(def.attributes.offroad).to.be.falsy;
+        expect(def.attributes.offroad).to.not.be.ok;
         expect(def.attributes.topspeed).to.equal(240);
     });
     
-    it('can get an instance of a drivable type', function() {
-        var instance = IoC.getInstance('vehicle', 'offroad == true && topspeed > 100');
+    it('can find offroad vehicles with a topspeed > 100', function() {
+        var instance = IoC.getInstance('vehicle', 'offroad && topspeed > 100');
         
         expect(instance).to.exist;
+    });
+
+    it('can find offroad vehicles with a topspeed > 150 (there are none)', function() {
+        var instance = IoC.getInstance('vehicle', 'offroad && topspeed > 150');
+        
+        expect(instance).to.not.exist;
     });
 });

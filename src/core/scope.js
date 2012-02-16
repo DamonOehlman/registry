@@ -106,7 +106,7 @@ ControlScope.prototype._find = function(collection, targetName, query) {
         matches = _.filter(matches, function(match) {
             matcher.target = match.attributes;
             
-            return matcher.query(query).passes;
+            return matcher.query(query).ok;
         });
     }
     

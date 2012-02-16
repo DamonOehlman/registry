@@ -46,7 +46,7 @@ describe('attribute tests (using prototypes)', function() {
         
         expect(def).to.exist;
         expect(def.attributes).to.exist;
-        expect(def.attributes.offroad).to.be.truthy;
+        expect(def.attributes.offroad).to.be.ok;
         expect(def.attributes.topspeed).to.equal(105);
     });
     
@@ -55,7 +55,7 @@ describe('attribute tests (using prototypes)', function() {
         
         expect(def).to.exist;
         expect(def.attributes).to.exist;
-        expect(def.attributes.offroad).to.be.falsy;
+        expect(def.attributes.offroad).to.not.be.ok;
         expect(def.attributes.topspeed).to.equal(240);
     });
     
@@ -67,7 +67,7 @@ describe('attribute tests (using prototypes)', function() {
     });
     
     it('can get an instance based on an equality query (offroad)', function() {
-        var instance = IoC.getInstance('vehicle', 'offroad == true');
+        var instance = IoC.getInstance('vehicle', 'offroad');
         
         expect(instance).to.exist;
         expect(instance.drive()).to.equal('driving a humvee');

@@ -1249,6 +1249,10 @@
     
     var reExpr = /([\w\.]+)\s*([\>\<\!\=]\=?)\s*([\w\.]+)/,
         reBool = /^(true|false)$/i,
+        reFalsyWords = /(undefined|null|false)/g,
+        reTruthyWords = /(true)/g,
+        reWords = /(\w{2,})/,
+        reSillyFn = /0\(.*?\)/g,
         exprLookups = {
             '==': ['equals'],
             '>':  ['gt'],
@@ -1256,6 +1260,10 @@
             '<':  ['lt'],
             '<=': ['lte'],
             '!=': ['equals', 'not']
+        },
+        wordReplacements = {
+            and: '&&',
+            or: '||'
         };
     
     function Matcher(target, opts) {
@@ -1264,34 +1272,34 @@
     
         // initialise members
         this.target = target;
-        this.passes = true;
+        this.ok = true;
     }
     
     Matcher.prototype = {
         gt: function(prop, value, result) {
             result = result || this;
-            result.passes = result.passes && this.target && this.target[prop] > value;
+            result.ok = result.ok && this.target && this.target[prop] > value;
             
             return this;
         },
         
         gte: function(prop, value, result) {
             result = result || this;
-            result.passes = result.passes && this.target && this.target[prop] >= value;
+            result.ok = result.ok && this.target && this.target[prop] >= value;
             
             return this;
         },
         
         lt: function(prop, value, result) {
             result = result || this;
-            result.passes = result.passes && this.target && this.target[prop] < value;
+            result.ok = result.ok && this.target && this.target[prop] < value;
             
             return this;
         },
         
         lte: function(prop, value, result) {
             result = result || this;
-            result.passes = result.passes && this.target && this.target[prop] <= value;
+            result.ok = result.ok && this.target && this.target[prop] <= value;
             
             return this;
         },
@@ -1299,17 +1307,17 @@
         equals: function(prop, value, result) {
             result = result || this;
             
-            if (result.passes && this.target) {
+            if (result.ok && this.target) {
                 var testVal = this.target[prop],
                     strings = (typeof testVal == 'string' || testVal instanceof String) &&
                         (typeof value == 'string' || value instanceof String);
     
                 // if the test value is a string and the value is a string
                 if (strings && (! this.opts.caseSensitive)) {
-                    result.passes = testVal.toLowerCase() === value.toLowerCase();
+                    result.ok = testVal.toLowerCase() === value.toLowerCase();
                 }
                 else {
-                    result.passes = testVal === value;
+                    result.ok = testVal === value;
                 }
             }
             
@@ -1319,7 +1327,7 @@
         not: function(prop, value, result) {
             // invert the passes state
             result = result || this;
-            result.passes = !result.passes;
+            result.ok = !result.ok;
             
             return this;
         },
@@ -1330,7 +1338,7 @@
             while (match) {
                 var fns = exprLookups[match[2]] || [],
                     result = {
-                        passes: fns.length > 0
+                        ok: fns.length > 0
                     },
                     val1 = parseFloat(match[1]) || match[1],
                     val2 = parseFloat(match[3]) || match[3];
@@ -1350,12 +1358,43 @@
                     }
                 }
                 
-                text = text.slice(0, match.index) + result.passes + text.slice(match.index + match[0].length);
+                text = text.slice(0, match.index) + result.ok + text.slice(match.index + match[0].length);
                 match = reExpr.exec(text);
             }
             
-            // split the text on
-            this.passes = eval(text);
+            // replace falsy words with 0s and truthy words with 1s
+            text = text.replace(reFalsyWords, '0').replace(reTruthyWords, '1');
+            
+            // find any remaining standalone words
+            match = reWords.exec(text);
+            while (match) {
+                var replacement = wordReplacements[match[0].toLowerCase()];
+                
+                // if we don't have a replacement for a word then look for the value of the property on the target
+                if ((! replacement) && this.target) {
+                    replacement = this.target[match[0]];
+                }
+                
+                text = text.slice(0, match.index) + replacement + text.slice(match.index + match[0].length);
+                
+                // replace falsy words with 0s and truthy words with 1s
+                text = text.replace(reFalsyWords, '0').replace(reTruthyWords, '1');
+                
+                // run the test again
+                match = reWords.exec(text);
+            }
+            
+            // replace peoples attempts at including functions with 0
+            text = text.replace(reSillyFn, '0');
+            
+            // evaluate the expression
+            try {
+                this.ok = eval(text);
+            }
+            catch (e) {
+                this.ok = false;
+                this._errtext = text;
+            }
             
             return this;
         }
@@ -1375,7 +1414,7 @@
         matcher = new Matcher(target, opts);
         
         if (typeof query != 'undefined') {
-            return matcher.query(query).passes;
+            return matcher.query(query).ok;
         }
         else {
             return matcher;
@@ -1400,7 +1439,7 @@
             var results = [];
             for (var ii = 0, count = array.length; ii < count; ii++) {
                 matcher.target = array[ii];
-                if (matcher.query(query).passes) {
+                if (matcher.query(query).ok) {
                     results[results.length] = array[ii];
                 }
             }
@@ -1412,7 +1451,7 @@
                 // update the matcher target
                 matcher.target = target;
                 
-                return matcher.query(query).passes;
+                return matcher.query(query).ok;
             };
         }
     };
@@ -1530,7 +1569,7 @@ var IoC = (function() {
             matches = _.filter(matches, function(match) {
                 matcher.target = match.attributes;
                 
-                return matcher.query(query).passes;
+                return matcher.query(query).ok;
             });
         }
         

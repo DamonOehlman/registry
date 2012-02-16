@@ -107,7 +107,7 @@ var IoC = (function() {
             matches = _.filter(matches, function(match) {
                 matcher.target = match.attributes;
                 
-                return matcher.query(query).passes;
+                return matcher.query(query).ok;
             });
         }
         
