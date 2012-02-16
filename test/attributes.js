@@ -32,7 +32,7 @@ describe('attribute tests', function() {
     });
     
     it('can get an instance of a drivable type', function() {
-        var instance = IoC.getInstance('vehicle', 'offroad AND topspeed > 100');
+        var instance = IoC.getInstance('vehicle', 'offroad == true && topspeed > 100');
         
         expect(instance).to.exist;
     });

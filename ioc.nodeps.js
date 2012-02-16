@@ -102,9 +102,12 @@ var IoC = (function() {
     
         // if we are working with the definitions collection and we have a query, then filter the results
         if (collection === this._definitions && query) {
+            var matcher = matchme();
+            
             matches = _.filter(matches, function(match) {
-                // TODO: filter based on query
-                return true;
+                matcher.target = match.attributes;
+                
+                return matcher.query(query).passes;
             });
         }
         

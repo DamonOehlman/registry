@@ -67,7 +67,7 @@ describe('attribute tests (using prototypes)', function() {
     });
     
     it('can get an instance based on an equality query (offroad)', function() {
-        var instance = IoC.getInstance('vehicle', 'offroad');
+        var instance = IoC.getInstance('vehicle', 'offroad == true');
         
         expect(instance).to.exist;
         expect(instance.drive()).to.equal('driving a humvee');
