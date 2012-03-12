@@ -1,5 +1,8 @@
-//= eve!eve.js
-//= underscore!underscore.js
-//= matchme!matchme.js
-
-//= ioc.nodeps
+//@header
+(function(glob) {
+    //= core/scope
+    
+    var IoC = new ControlScope();
+    
+    //@export IoC
+})(this);

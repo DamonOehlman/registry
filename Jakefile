@@ -1,19 +1,14 @@
 var interleave = require('interleave'),
+    fs = require('fs'),
+    path = require('path'),
     aliases = {
-        eve: 'github://DmitryBaranovskiy/eve/',
-        underscore: 'github://documentcloud/underscore/',
-        matchme: 'github://DamonOehlman/matchme/'
-    },
-    aliasesLocal = {
-        eve: '/development/projects/github/eve/',
-        underscore: '/development/projects/github/underscore/',
-        matchme: '/development/projects/DamonOehlman/matchme/'
+        eve: 'github://DmitryBaranovskiy/eve/'
     };
 
 desc('build the client files');
 task('default', function() {
     interleave('src/ioc.js', {
-        aliases: aliases,
+        data: JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8')),
         path: '.',
         after: ['uglify']
     });
@@ -22,10 +17,4 @@ task('default', function() {
         aliases: aliases,
         path: '_lib-generated'
     });
-});
-
-task('build.local', function() {
-    aliases = aliasesLocal;
-    
-    jake.Task['default'].invoke();
 });

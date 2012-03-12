@@ -43,11 +43,18 @@ ControlScope.prototype._create = function(type, query, allowCreate) {
         );
         
         if (requireCreate) {
+            // if the creator is a function, then run the function and return the result
             if (typeof def.creator == 'function') {
-                newInstance = def.creator.apply(null, args);
+                newInstance = def.creator.apply(null);
             }
-            else if (typeof def.creator.constructor == 'function') {
+            // if creator is a prototype, then create a new instance of the prototype
+            else if (def.creator && def.creator.prototype && typeof def.creator.constructor == 'function') {
                 newInstance = new def.creator.constructor;
+            }
+            // finally, if the creator is defined (it could be an existing object) and 
+            // this is behaving as a singleton instance, then return that instance
+            else if (def.singleton && def.creator) {
+                newInstance = def.creator;
             }
 
             if (newInstance) {
@@ -173,6 +180,21 @@ ControlScope.prototype.define = function(type, opts, creator) {
 
     // extract the attributes
     type = this._extractAttributes(type, creator, attributes);
+    
+    // run a sanity check against the creator
+    if (! creator) {
+        throw new Error('Unable to define an instance with no creator');
+    }
+    else {
+        var isObject = typeof creator == 'object',
+            isProto = creator && creator.prototype && typeof creator.constructor == 'function';
+            
+        // if the creator is an object, and not a prototype 
+        // force singleton mode and we are not in singleton
+        if (isObject && (! isProto)) {
+            opts.singleton = true;
+        }
+    }
     
     // define the constructors
     def = this._definitions[type] = {

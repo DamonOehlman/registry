@@ -16,7 +16,7 @@
   },
 
   "devDependencies": {
-    "interleave": "0.1.x",
+    "interleave": "0.2.x",
     "uglify-js": "*",
     "chai": "0.3.x"
   },
