@@ -1,5 +1,5 @@
 //@header
-(function(glob) {
+;(function(glob) {
     //= core/scope
     
     var IoC = new ControlScope();
