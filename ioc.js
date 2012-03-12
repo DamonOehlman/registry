@@ -3,7 +3,7 @@
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
 
-(function(glob) {
+;(function(glob) {
     var reAttributes = /^(.*)\[(.*)\]$/,
         reAttr = /^(\+)?(\w+)\=?(.*)$/;
     
