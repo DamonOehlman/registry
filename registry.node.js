@@ -1,7 +1,7 @@
 var wildcard = require('wildcard'),
     matchme = require('matchme');
     
-// registry 0.0.0
+// registry 0.1.0
 // ────────────────────────────────────────────────────────────────────────────────────────
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
@@ -162,6 +162,35 @@ var wildcard = require('wildcard'),
         return definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
     }
     
+    // ## registry.scaffold
+    // The scaffold function is used to define a prototype rather than a module pattern style 
+    // constructor function.  Internally the registry creates a define call and creates an 
+    // anonymous function that creates a new instance of the prototype via the constructor 
+    // and ensures that the prototype has be assigned to the object
+    function _scaffold(namespace, constructor, prototype) {
+        // if the constructor is not a function, then remap the arguments
+        if (typeof constructor != 'function') {
+            prototype = constructor;
+            constructor = null;
+        }
+        
+        return _define(namespace, function() {
+            var result = constructor ? new constructor() : {};
+
+            // assign the prototype to the object
+            if (prototype) {
+                result.__proto__ = prototype;
+            }
+
+            // return the result
+            return result;
+        });
+    }
+    
+    // ## registry.singleton
+    // This is a version of `registry.define` that marks the definition as a singleton instance.
+    // What this means is that once an instance of the object is created, that instance is cached
+    // in the definition and return for future create calls.
     function _singleton() {
         // pass through the function arguments to the define call
         var definition = _define.apply(null, arguments);
@@ -179,6 +208,7 @@ var wildcard = require('wildcard'),
     
     registry.define = _define;
     registry.find = registry;
+    registry.scaffold = _scaffold;
     registry.singleton = _singleton;
     registry.undef = _undef;
     
