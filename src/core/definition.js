@@ -13,7 +13,7 @@ function RegistryDefinition(namespace, constructor, attributes) {
     }
     
     // mark this as not being a singleton instance (until told otherwise)
-    this.singleton = false;
+    this._singleton = false;
 }
 
 RegistryDefinition.prototype = {
@@ -35,11 +35,16 @@ RegistryDefinition.prototype = {
             _trigger.call(newObject, 'create', this);
 
             // if the definition is a singleton and the instance is not yet assigned, then do that now
-            if (this.singleton && (! this.instance)) {
+            if (this._singleton && (! this.instance)) {
                 this.instance = newObject;
             }
         } 
 
         return newObject;
+    },
+    
+    singleton: function() {
+        this._singleton = true;
+        return this;
     }
 };

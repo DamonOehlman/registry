@@ -66,13 +66,7 @@
     // in the definition and return for future create calls.
     function _singleton() {
         // pass through the function arguments to the define call
-        var definition = _define.apply(null, arguments);
-        
-        // mark the definition as a singleton instance
-        definition.singleton = true;
-        
-        // return the definition
-        return definition;
+        return _define.apply(null, arguments).singleton();
     }
     
     function _undef(namespace) {

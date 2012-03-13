@@ -1,7 +1,7 @@
 var wildcard = require('wildcard'),
     matchme = require('matchme');
     
-// registry 0.1.0
+// registry 0.1.1
 // ────────────────────────────────────────────────────────────────────────────────────────
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
@@ -79,7 +79,7 @@ var wildcard = require('wildcard'),
         }
         
         // mark this as not being a singleton instance (until told otherwise)
-        this.singleton = false;
+        this._singleton = false;
     }
     
     RegistryDefinition.prototype = {
@@ -101,12 +101,17 @@ var wildcard = require('wildcard'),
                 _trigger.call(newObject, 'create', this);
     
                 // if the definition is a singleton and the instance is not yet assigned, then do that now
-                if (this.singleton && (! this.instance)) {
+                if (this._singleton && (! this.instance)) {
                     this.instance = newObject;
                 }
             } 
     
             return newObject;
+        },
+        
+        singleton: function() {
+            this._singleton = true;
+            return this;
         }
     };
 
@@ -117,6 +122,22 @@ var wildcard = require('wildcard'),
     RegistryResults.prototype = new Array();
     RegistryResults.prototype.create = function() {
         return this[0] ? this[0].create.apply(this[0], arguments) : undefined;
+    };
+    
+    RegistryResults.prototype.current = function() {
+        return this.instances()[0];
+    };
+    
+    RegistryResults.prototype.instances = function() {
+        var results = [];
+    
+        for (var ii = 0, count = this.length; ii < count; ii++) {
+            if (this[ii].instance) {
+                results[results.length] = this[ii].instance;
+            }
+        }
+        
+        return results;
     };
     
     // override the filter implementation (and give one to old browsers)
@@ -193,13 +214,7 @@ var wildcard = require('wildcard'),
     // in the definition and return for future create calls.
     function _singleton() {
         // pass through the function arguments to the define call
-        var definition = _define.apply(null, arguments);
-        
-        // mark the definition as a singleton instance
-        definition.singleton = true;
-        
-        // return the definition
-        return definition;
+        return _define.apply(null, arguments).singleton();
     }
     
     function _undef(namespace) {
