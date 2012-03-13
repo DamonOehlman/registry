@@ -1,32 +1,31 @@
 {
-  "name": "IoC",
+  "name": "registry",
   "description": "Experimental namespaced IoC container",
   "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
   "tags": [ "ioc" ],
-  "version": "0.0.1",
-  "main": "./_lib-generated/ioc.js",
+  "version": "0.0.0",
+  "main": "./registry.node.js",
 
   "engines": {
     "node": ">= 0.4.x < 0.7.0"
   },
   
   "dependencies": {
-    "underscore": "1.3.x",
-    "matchme": "*"
+    "matchme": "*",
+    "wildcard": "*"
   },
 
   "devDependencies": {
-    "interleave": "0.2.x",
-    "uglify-js": "*",
-    "chai": "0.3.x"
+    "expect.js": "0.1.x",
+    "mocha": "*"
   },
 
   "repository": {
     "type": "git",
-    "url": "git://github.com/sidelab/IoC.git"
+    "url": "git://github.com/DamonOehlman/register.git"
   },
   "bugs": {
-    "url": "http://github.com/sidelab/IoC/issues"
+    "url": "http://github.com/DamonOehlman/register/issues"
   },
   
   "contributors": []

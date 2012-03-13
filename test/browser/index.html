@@ -3,26 +3,30 @@
   <meta charset="utf-8">
   <title>Mocha Tests</title>
   <link rel="stylesheet" href="lib/mocha.css" />
-  <script src="https://raw.github.com/DmitryBaranovskiy/eve/master/eve.min.js"></script>
   <script src="https://raw.github.com/DamonOehlman/matchme/master/matchme.min.js"></script>
-  <script src="https://raw.github.com/documentcloud/underscore/master/underscore-min.js"></script>
-  <script src="../../ioc.js"></script>
+  <script src="https://raw.github.com/DamonOehlman/wildcard/master/wildcard.js"></script>
+  <script src="../../registry.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="lib/chai.js"></script>
+  <script src="lib/expect.js"></script>
   <script src="lib/mocha.js"></script>
   <script>mocha.setup('bdd');</script>
   <script>
   var reLastPart = /.*\/(.*)$/;
   
   function require(module) {
-      return window[module.replace('underscore', '_').replace(reLastPart, '$1')];
+      return window[module
+          .replace('underscore', '_')
+          .replace(/\.node/, '')
+          .replace(/\.js/, '')
+          .replace(reLastPart, '$1')
+      ];
   }
   </script>
   <script src="../core.js"></script>
   <script src="../singleton.js"></script>
   <script src="../attributes.js"></script>
-  <script src="../attributes-prototypes.js"></script>
   <script src="../object.js"></script>
+  <script src="../notification.js"></script>
   <script>
     $(function () {
       mocha.run();

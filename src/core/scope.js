@@ -1,5 +1,6 @@
 var reAttributes = /^(.*)\[(.*)\]$/,
-    reAttr = /^(\+)?(\w+)\=?(.*)$/;
+    reAttr = /^(\+)?(\w+)\=?(.*)$/,
+    reWildcard = /^\*/g;
 
 function ControlScope(ns) {
     var scope = this;
@@ -97,7 +98,9 @@ ControlScope.prototype._extractAttributes = function(type, creator, attributes) 
 
 ControlScope.prototype._find = function(collection, targetName, query) {
     // create the regex
-    var reMatchingDef = new RegExp('^' + (targetName || '').replace(/\.\*?$/, '') + '(?:$|\\.)'), 
+    var reMatchingDef = new RegExp('^' + (targetName || '')
+            .replace(reWildcard, '\\*')
+            .replace(/\.\*?$/, '') + '(?:$|\\.)'), 
         key, matches = [];
     
     // iterate through the definitions and look for a regex match
@@ -155,7 +158,8 @@ ControlScope.prototype.accept = function(type, opts, callback) {
         callback(existing[ii]);
     }
     
-    // when new instances are created 
+    // when new instances are created
+    console.log(evtName);
     eve.on(evtName, callback);
 
     return {

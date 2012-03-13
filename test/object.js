@@ -1,18 +1,18 @@
-var IoC = require('IoC'),
-    expect = require('chai').expect;
+var registry = require('../registry.node'),
+    expect = require('expect.js');
 
 describe('existing object tests', function() {
-    it('can define a singleton', function() {
-        IoC.define('config', {
+    it('can define an instance', function() {
+        registry.define('config').instance = {
             test: true
-        });
+        };
     });
     
-    it('singletons only create the one instance', function() {
-        var config1 = IoC.getInstance('config'),
-            config2 = IoC.getInstance('config');
+    it('if an existing instance was defined, then calling create does nothing', function() {
+        var config1 = registry('config').create(),
+            config2 = registry('config').create();
             
-        expect(config1 === config2).to.be.truthy;
-        expect(config1.test).to.be.ok;
+        expect(config1 === config2).to.be.ok();
+        expect(config1.test).to.be.ok();
     });
 });

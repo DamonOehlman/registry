@@ -1,9 +1,9 @@
-var IoC = require('IoC'),
-    expect = require('chai').expect;
+var registry = require('../registry.node'),
+    expect = require('expect.js');
 
 describe('singleton tests', function() {
     it('can define a singleton', function() {
-        IoC.define('test.oneonly', { singleton: true }, function() {
+        registry.singleton('test.oneonly', function() {
             return {
                 name: 'Ted'
             };
@@ -11,26 +11,10 @@ describe('singleton tests', function() {
     });
     
     it('singletons only create the one instance', function() {
-        var instance1 = IoC.getInstance('test.oneonly'),
-            instance2 = IoC.getInstance('test.oneonly');
+        var instance1 = registry('test.oneonly').create(),
+            instance2 = registry('test.oneonly').create();
             
-        expect(instance1 === instance2).to.be.truthy;
+        expect(instance1 === instance2).to.be.ok();
         expect(instance1.name).to.equal('Ted');
-    });
-    
-    it('can define a singleton using syntactic sugar', function() {
-        IoC.singleton('test2.oneonly', function() {
-            return {
-                name: 'Fred'
-            };
-        });
-    });
-    
-    it('has two matching instances for the second defined singleton', function() {
-        var instance1 = IoC.getInstance('test2.oneonly'),
-            instance2 = IoC.getInstance('test2.oneonly');
-            
-        expect(instance1 === instance2).to.be.truthy;
-        expect(instance1.name).to.equal('Fred');
     });
 });
