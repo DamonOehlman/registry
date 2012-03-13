@@ -37,6 +37,16 @@
         _listeners[evt.type].push({ matcher: wildcard(evt.pattern), handler: handler });
     }
     
+    function _trigger(eventType, def) {
+        var listeners = _listeners[eventType] || [];
+        
+        for (var ii = 0, count = listeners.length; ii < count; ii++) {
+            if (listeners[ii].matcher.match(def.namespace)) {
+                listeners[ii].handler.call(this, def);
+            }
+        }
+    }
+    
     function _unbind(pattern, handler) {
         var evt = _parseEventPattern(pattern),
             listeners = _listeners[evt.type] || [];
@@ -158,16 +168,6 @@
         
         // return the definition
         return definition;
-    }
-    
-    function _trigger(eventType, def) {
-        var listeners = _listeners[eventType] || [];
-        
-        for (var ii = 0, count = listeners.length; ii < count; ii++) {
-            if (listeners[ii].matcher.match(def.namespace)) {
-                listeners[ii].handler.call(this, def);
-            }
-        }
     }
     
     function _undef(namespace) {

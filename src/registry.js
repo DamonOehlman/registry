@@ -46,16 +46,6 @@
         return definition;
     }
     
-    function _trigger(eventType, def) {
-        var listeners = _listeners[eventType] || [];
-        
-        for (var ii = 0, count = listeners.length; ii < count; ii++) {
-            if (listeners[ii].matcher.match(def.namespace)) {
-                listeners[ii].handler.call(this, def);
-            }
-        }
-    }
-    
     function _undef(namespace) {
         delete _defitions[namespace];
     }
