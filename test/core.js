@@ -21,13 +21,13 @@ describe('core tests', function() {
     });
     
     it('can define a new module with a simple function constructor', function() {
-        registry.define('test', function() {
+        registry.define('test.core', function() {
             return 'test';
         });
     });
     
     it('can create a new instance from the test definition', function() {
-        var instance = registry('test').create();
+        var instance = registry('test.core').create();
         
         expect(instance).to.be.ok();
         expect(typeof instance).to.equal('string');
