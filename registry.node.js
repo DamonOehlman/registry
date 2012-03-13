@@ -7,20 +7,66 @@ var wildcard = require('wildcard'),
 // ────────────────────────────────────────────────────────────────────────────────────────
 
 (function(glob) {
-    var definitions = {},
-        _listeners = {};
+    var definitions = {};
         
-    function RegistryDefinition(namespace, attributes, constructor) {
-        // remap args if required
-        if (typeof attributes == 'function') {
-            constructor = attributes;
-            attributes = {};
+    var _listeners = {},
+        reEventType = /^(\w+)\:(.*)$/;
+        
+    function _parseEventPattern(pattern) {
+        // extract the event type from the pattern
+        var match = reEventType.exec(pattern),
+            details = {
+                type: 'default',
+                pattern: pattern
+            };
+        
+        // if we have a match, then appropriately map the pattern 
+        if (match) {
+            details.type = match[1];
+            details.pattern = match[2];
         }
+        
+        return details;
+    }
+    
+    function _bind(pattern, handler) {
+        var evt = _parseEventPattern(pattern);
+        
+        // create the array if required
+        if (! _listeners[evt.type]) {
+            _listeners[evt.type] = [];
+        }
+        
+        _listeners[evt.type].push({ matcher: wildcard(evt.pattern), handler: handler });
+    }
+    
+    function _unbind(pattern, handler) {
+        var evt = _parseEventPattern(pattern),
+            listeners = _listeners[evt.type] || [];
+            
+        // iterate through the listeners and splice out the matching handler
+        for (var ii = listeners.length; ii--; ) {
+            var matcher = listeners[ii].matcher;
+            
+            if (matcher && matcher.match(evt.pattern) && listeners[ii].handler === handler) {
+                listeners.splice(ii, 1);
+            }
+        } 
+    }
+
+    function RegistryDefinition(namespace, constructor, attributes) {
         
         // initialise members
         this.namespace = namespace;
         this.attributes = attributes || {};
-        this.constructor = constructor;
+        
+        // deal with the various different constructor values appropriately
+        if (typeof constructor == 'function') {
+            this.constructor = constructor;
+        }
+        else {
+            this.instance = constructor;
+        }
         
         // mark this as not being a singleton instance (until told otherwise)
         this.singleton = false;
@@ -33,6 +79,13 @@ var wildcard = require('wildcard'),
             if (this.constructor || this.instance) {
                 // create the new object or re-use the instance if it's there
                 newObject = this.instance || this.constructor.apply(null, arguments);
+                
+                // map the attributes across to the new object
+                for (var key in this.attributes) {
+                    if (! newObject.hasOwnProperty(key)) {
+                        newObject[key] = this.attributes[key];
+                    }
+                }
                 
                 // trigger the create
                 _trigger.call(newObject, 'create', this);
@@ -56,19 +109,18 @@ var wildcard = require('wildcard'),
         return this[0] ? this[0].create.apply(this[0], arguments) : undefined;
     };
     
-    if (! RegistryResults.prototype.filter) {
-        RegistryResults.prototype.filter = function(callback) {
-            var results = new RegistryResult();
-            
-            for (var ii = 0, count = this.length; ii < count; ii++) {
-                if (callback(this[ii])) {
-                    results.push(this[ii]);
-                }
+    // override the filter implementation (and give one to old browsers)
+    RegistryResults.prototype.filter = function(callback) {
+        var results = new RegistryResults();
+        
+        for (var ii = 0, count = this.length; ii < count; ii++) {
+            if (callback(this[ii])) {
+                results.push(this[ii]);
             }
-            
-            return results;
-        };
-    }
+        }
+        
+        return results;
+    };
 
     
     function registry(namespace, test) {
@@ -91,23 +143,13 @@ var wildcard = require('wildcard'),
         return results;
     }
     
-    function _define(namespace, attributes, constructor) {
+    function _define(namespace, constructor, attributes) {
         if (definitions[namespace]) {
             throw new Error('Unable to define "' + namespace + '", it already exists');
         }
         
         // create the definition and return the instance
-        return definitions[namespace] = new RegistryDefinition(namespace, attributes, constructor);
-    }
-    
-    function _listenFor(eventType) {
-        if (! _listeners[eventType]) {
-            _listeners[eventType] = [];
-        }
-        
-        return function(pattern, handler) {
-            _listeners[eventType].push({ matcher: wildcard(pattern), handler: handler });
-        };
+        return definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
     }
     
     function _singleton() {
@@ -135,14 +177,14 @@ var wildcard = require('wildcard'),
         delete _defitions[namespace];
     }
     
-    registry.on = {
-        create: _listenFor('create')
-    };
-    
     registry.define = _define;
     registry.find = registry;
     registry.singleton = _singleton;
     registry.undef = _undef;
+    
+    // event handling
+    registry.bind = _bind;
+    registry.unbind = _unbind;
     
     (typeof module != "undefined" && module.exports) ? (module.exports = registry) : (typeof define != "undefined" ? (define("registry", [], function() { return registry; })) : (glob.registry = registry));
 })(this);

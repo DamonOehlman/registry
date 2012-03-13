@@ -3,9 +3,9 @@ var registry = require('../registry.node'),
 
 describe('existing object tests', function() {
     it('can define an instance', function() {
-        registry.define('config').instance = {
+        registry.define('config', {
             test: true
-        };
+        });
     });
     
     it('if an existing instance was defined, then calling create does nothing', function() {

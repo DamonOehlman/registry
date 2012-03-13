@@ -3,13 +3,13 @@ var registry = require('../registry.node'),
 
 describe('attribute tests', function() {
     it('can define a type with attributes (drivable.humvee)', function() {
-        var def = registry.define('vehicle.humvee', { offroad: true, topspeed: 105 }, function() {
+        var def = registry.define('vehicle.humvee', function() {
             return {
                 drive: function(from, to) {
                     return 'driving a humvee';
                 }
             };
-        });
+        }, { offroad: true, topspeed: 105 });
         
         expect(def).to.be.ok();
         expect(def.attributes).to.be.ok();
@@ -18,13 +18,13 @@ describe('attribute tests', function() {
     });
     
     it('can define another type with attributes (drivable.porsche)', function() {
-        var def = registry.define('vehicle.porsche', { topspeed: 240 }, function() {
+        var def = registry.define('vehicle.porsche', function() {
             return {
                 drive: function(from, to) {
                     return 'driving a porsche';
                 }
             };
-        });
+        }, { topspeed: 240 });
         
         expect(def).to.be.ok();
         expect(def.attributes).to.be.ok();;
@@ -33,14 +33,15 @@ describe('attribute tests', function() {
     });
     
     it('can find offroad vehicles with a topspeed > 100', function() {
-        var matches = registry('vehicle', 'offroad && topspeed > 100');
+        var instance = registry('vehicle', 'offroad && topspeed > 100').create();
         
-        expect(matches).to.have.length(1);
+        expect(instance).to.be.ok();
+        expect(instance.topspeed).to.equal(105);
     });
 
     it('can find offroad vehicles with a topspeed > 150 (there are none)', function() {
-        var matches = registry('vehicle', 'offroad && topspeed > 150');
+        var instance = registry('vehicle', 'offroad && topspeed > 150').create();
         
-        expect(matches).to.have.length(0);
+        expect(instance).to.not.be.ok();
     });
 });

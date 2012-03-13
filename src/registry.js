@@ -1,8 +1,8 @@
 //@header
 (function(glob) {
-    var definitions = {},
-        _listeners = {};
+    var definitions = {};
         
+    //= core/events
     //= core/definition
     //= core/results
     
@@ -26,23 +26,13 @@
         return results;
     }
     
-    function _define(namespace, attributes, constructor) {
+    function _define(namespace, constructor, attributes) {
         if (definitions[namespace]) {
             throw new Error('Unable to define "' + namespace + '", it already exists');
         }
         
         // create the definition and return the instance
-        return definitions[namespace] = new RegistryDefinition(namespace, attributes, constructor);
-    }
-    
-    function _listenFor(eventType) {
-        if (! _listeners[eventType]) {
-            _listeners[eventType] = [];
-        }
-        
-        return function(pattern, handler) {
-            _listeners[eventType].push({ matcher: wildcard(pattern), handler: handler });
-        };
+        return definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
     }
     
     function _singleton() {
@@ -70,14 +60,14 @@
         delete _defitions[namespace];
     }
     
-    registry.on = {
-        create: _listenFor('create')
-    };
-    
     registry.define = _define;
     registry.find = registry;
     registry.singleton = _singleton;
     registry.undef = _undef;
+    
+    // event handling
+    registry.bind = _bind;
+    registry.unbind = _unbind;
     
     //@export registry
 })(this);
