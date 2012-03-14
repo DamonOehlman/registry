@@ -1,13 +1,7 @@
-# Experimental namespaced IoC container
+# Registry
 
-This is a simple project designed to provide something conceptually similar to IoC found in other languages.  It's definitely not the same, given that other implementations of IoC perform method signature matching and other techniques not well suited to JS.
+It's a bucket. A Javascript bucket.  A big Javascript bucket for defining your modules, classes, configuration objects, etc.  While we could throw around different acronyms like IoC, AOP and the like, nothing quite fits exactly how registry works.  But they do give you a feel for the concepts and inspiration behind the project.
 
-<a href="http://travis-ci.org/#!/DamonOehlman/registry"><img src="https://secure.travis-ci.org/DamonOehlman/registry.png" alt="Build Status"></a>
+## The Importance of Namespaces
 
-This implementation instead uses __purpose-based namespacing__ when defining "classes".  What I mean by this is that something should be given a namespace relative to it's purpose rather than it's ownership (as is common in other languages).
-
-## Examples
-
-
-
-For the moment, see the tests but I'll write something more helpful soon.
+Registry uses namespaces to pragmatically define the purpose of a class, module or function.  

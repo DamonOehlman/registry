@@ -19,7 +19,7 @@
         // if we have been passed a matchme test string, then filter the results
         if (typeof test != 'undefined') {
             results = results.filter(function(item) {
-                return matchme(item.attributes, test);
+                return item.matches(test);
             });
         }
         

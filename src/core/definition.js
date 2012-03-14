@@ -2,14 +2,26 @@ function RegistryDefinition(namespace, constructor, attributes) {
     
     // initialise members
     this.namespace = namespace;
-    this.attributes = attributes || {};
+    
+    // initialise the prototype
+    this._prototype = {};
     
     // deal with the various different constructor values appropriately
     if (typeof constructor == 'function') {
         this.constructor = constructor;
+        
+        // add the prototype associated with the constructor to the current prototype
+        this._prototype.__proto__ = constructor.prototype;
     }
     else {
         this.instance = constructor;
+    }
+    
+    // copy attribute values across to the prototype
+    if (attributes) {
+        for (var key in attributes) {
+            this._prototype[key] = attributes[key];
+        }
     }
     
     // mark this as not being a singleton instance (until told otherwise)
@@ -24,17 +36,8 @@ RegistryDefinition.prototype = {
             // create the new object or re-use the instance if it's there
             newObject = this.instance || this.constructor.apply(null, arguments);
             
-            // if we have a prototype defined then apply it to the object
-            if (this._prototype) {
-                newObject.__proto__ = this._prototype;
-            }
-            
-            // map the attributes across to the new object
-            for (var key in this.attributes) {
-                if (! newObject.hasOwnProperty(key)) {
-                    newObject[key] = this.attributes[key];
-                }
-            }
+            // assign the prototype
+            newObject.__proto__ = this._prototype;
             
             // trigger the create
             _trigger.call(newObject, 'create', this);
@@ -63,6 +66,10 @@ RegistryDefinition.prototype = {
             
             return this;
         }
+    },
+    
+    matches: function(test) {
+        return matchme(this._prototype, test);
     },
     
     prototype: function(proto) {
