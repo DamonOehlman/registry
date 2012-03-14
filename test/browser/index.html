@@ -16,7 +16,7 @@
   function require(module) {
       return window[module
           .replace('underscore', '_')
-          .replace(/\.node/, '')
+          .replace(/\.common/, '')
           .replace(/\.js/, '')
           .replace(reLastPart, '$1')
       ];

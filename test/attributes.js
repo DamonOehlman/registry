@@ -1,4 +1,4 @@
-var registry = require('../registry.node'),
+var registry = require('../registry.common'),
     expect = require('expect.js');
 
 describe('attribute tests', function() {
