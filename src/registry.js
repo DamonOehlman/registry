@@ -47,17 +47,20 @@
             constructor = null;
         }
         
-        return _define(namespace, function() {
-            var result = constructor ? new constructor() : {};
-
-            // assign the prototype to the object
-            if (prototype) {
-                result.__proto__ = prototype;
+        var def = _define(namespace, function() {
+            var instance = constructor ? new constructor() : {};
+            
+            // if we have been supplied arguments, then call the constructor again
+            // with the arguments supplied
+            if (instance && arguments.length > 0) {
+                constructor.apply(instance, arguments);
             }
-
-            // return the result
-            return result;
+            
+            // return the new instance
+            return instance;
         });
+        
+        return prototype ? def.prototype(prototype) : def;
     }
     
     // ## registry.singleton

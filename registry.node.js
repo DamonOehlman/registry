@@ -1,7 +1,7 @@
 var wildcard = require('wildcard'),
     matchme = require('matchme');
     
-// registry 0.1.1
+// registry 0.1.2
 // ────────────────────────────────────────────────────────────────────────────────────────
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
@@ -90,6 +90,11 @@ var wildcard = require('wildcard'),
                 // create the new object or re-use the instance if it's there
                 newObject = this.instance || this.constructor.apply(null, arguments);
                 
+                // if we have a prototype defined then apply it to the object
+                if (this._prototype) {
+                    newObject.__proto__ = this._prototype;
+                }
+                
                 // map the attributes across to the new object
                 for (var key in this.attributes) {
                     if (! newObject.hasOwnProperty(key)) {
@@ -107,6 +112,33 @@ var wildcard = require('wildcard'),
             } 
     
             return newObject;
+        },
+        
+        extend: function(proto) {
+            if (! this._prototype) {
+                return this.prototype(proto);
+            }
+            else {
+                for (var key in proto) {
+                    // if none of the descendant prototypes have implemented this member, then copy
+                    // it across to the new prototype
+                    if (! this._prototype[key]) {
+                        this._prototype[key] = proto[key];
+                    }
+                }
+                
+                return this;
+            }
+        },
+        
+        prototype: function(proto) {
+            // create a new instance of the prototype
+            this._prototype = {};
+            
+            // add the base prototype to the new prototype to satisfy instance of calls
+            this._prototype.__proto__ = proto;
+            
+            return this;
         },
         
         singleton: function() {
@@ -195,17 +227,20 @@ var wildcard = require('wildcard'),
             constructor = null;
         }
         
-        return _define(namespace, function() {
-            var result = constructor ? new constructor() : {};
-
-            // assign the prototype to the object
-            if (prototype) {
-                result.__proto__ = prototype;
+        var def = _define(namespace, function() {
+            var instance = constructor ? new constructor() : {};
+            
+            // if we have been supplied arguments, then call the constructor again
+            // with the arguments supplied
+            if (instance && arguments.length > 0) {
+                constructor.apply(instance, arguments);
             }
-
-            // return the result
-            return result;
+            
+            // return the new instance
+            return instance;
         });
+        
+        return prototype ? def.prototype(prototype) : def;
     }
     
     // ## registry.singleton

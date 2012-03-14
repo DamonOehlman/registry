@@ -24,6 +24,11 @@ RegistryDefinition.prototype = {
             // create the new object or re-use the instance if it's there
             newObject = this.instance || this.constructor.apply(null, arguments);
             
+            // if we have a prototype defined then apply it to the object
+            if (this._prototype) {
+                newObject.__proto__ = this._prototype;
+            }
+            
             // map the attributes across to the new object
             for (var key in this.attributes) {
                 if (! newObject.hasOwnProperty(key)) {
@@ -41,6 +46,33 @@ RegistryDefinition.prototype = {
         } 
 
         return newObject;
+    },
+    
+    extend: function(proto) {
+        if (! this._prototype) {
+            return this.prototype(proto);
+        }
+        else {
+            for (var key in proto) {
+                // if none of the descendant prototypes have implemented this member, then copy
+                // it across to the new prototype
+                if (! this._prototype[key]) {
+                    this._prototype[key] = proto[key];
+                }
+            }
+            
+            return this;
+        }
+    },
+    
+    prototype: function(proto) {
+        // create a new instance of the prototype
+        this._prototype = {};
+        
+        // add the base prototype to the new prototype to satisfy instance of calls
+        this._prototype.__proto__ = proto;
+        
+        return this;
     },
     
     singleton: function() {
