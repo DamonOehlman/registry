@@ -63,15 +63,6 @@
         return prototype ? def.prototype(prototype) : def;
     }
     
-    // ## registry.singleton
-    // This is a version of `registry.define` that marks the definition as a singleton instance.
-    // What this means is that once an instance of the object is created, that instance is cached
-    // in the definition and return for future create calls.
-    function _singleton() {
-        // pass through the function arguments to the define call
-        return _define.apply(null, arguments).singleton();
-    }
-    
     function _undef(namespace) {
         delete _defitions[namespace];
     }
@@ -79,7 +70,6 @@
     registry.define = _define;
     registry.find = registry;
     registry.scaffold = _scaffold;
-    registry.singleton = _singleton;
     registry.undef = _undef;
     
     // event handling

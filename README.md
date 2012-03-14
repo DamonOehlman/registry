@@ -6,6 +6,8 @@ This is a simple project designed to provide something conceptually similar to I
 
 This implementation instead uses __purpose-based namespacing__ when defining "classes".  What I mean by this is that something should be given a namespace relative to it's purpose rather than it's ownership (as is common in other languages).
 
-## Example Usage
+## Examples
+
+
 
 For the moment, see the tests but I'll write something more helpful soon.

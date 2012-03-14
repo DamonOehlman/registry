@@ -1,7 +1,7 @@
 var wildcard = require('wildcard'),
     matchme = require('matchme');
     
-// registry 0.1.2
+// registry 0.1.3
 // ────────────────────────────────────────────────────────────────────────────────────────
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
@@ -243,15 +243,6 @@ var wildcard = require('wildcard'),
         return prototype ? def.prototype(prototype) : def;
     }
     
-    // ## registry.singleton
-    // This is a version of `registry.define` that marks the definition as a singleton instance.
-    // What this means is that once an instance of the object is created, that instance is cached
-    // in the definition and return for future create calls.
-    function _singleton() {
-        // pass through the function arguments to the define call
-        return _define.apply(null, arguments).singleton();
-    }
-    
     function _undef(namespace) {
         delete _defitions[namespace];
     }
@@ -259,7 +250,6 @@ var wildcard = require('wildcard'),
     registry.define = _define;
     registry.find = registry;
     registry.scaffold = _scaffold;
-    registry.singleton = _singleton;
     registry.undef = _undef;
     
     // event handling

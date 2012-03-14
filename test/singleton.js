@@ -18,14 +18,6 @@ describe('singleton tests', function() {
         expect(instance1.name).to.equal('Ted');
     });
     
-    it('can define a singleton by calling the singleton method on a definition', function() {
-        registry.singleton('test.another.oneonly', function() {
-            return {
-                name: 'Bob'
-            };
-        });
-    });
-    
     it('can get the instances for singletons', function() {
         var instances = registry('test').instances();
         
