@@ -59,41 +59,4 @@ describe('core tests', function() {
     it('can create a new pingpong object using the general implementation (with wildcards)', function() {
         checkPonger(registry('pingpong.*').create());
     });
-    
-    /*
-    it('can get the existing types defined', function(done) {
-        IoC.accept('pingpong', { definition: true }, function(object) {
-            expect(object).to.exist;
-            expect(object.creator).to.exist;
-            
-            done();
-        });
-    });
-    
-    it('can get the existing instances defined', function(done) {
-        var expected = 3;
-        
-        IoC.accept('pingpong', function(object) {
-            expect(object).to.exist;
-            expect(typeof object.ping).to.equal('function');
-            
-            expected -= 1;
-            if (expected <= 0) {
-                done();
-            }
-        });
-    });
-    
-    it('can get all the instances for a particular type', function() {
-        var instances = IoC.instances('test');
-        expect(instances).to.exist;
-        expect(instances.length).to.equal(2);
-    });
-    
-    it('doesn\'t find instances of a partial match', function() {
-        var instances = IoC.instances('ping');
-        expect(instances).to.exist;
-        expect(instances.length).to.equal(0);
-    });
-    */
 });

@@ -8,4 +8,4 @@ This implementation instead uses __purpose-based namespacing__ when defining "cl
 
 ## Example Usage
 
-See the tests.
+For the moment, see the tests but I'll write something more helpful soon.
