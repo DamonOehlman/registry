@@ -216,7 +216,13 @@
         }
         
         // create the definition and return the instance
-        return definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
+        var definition = definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
+        
+        // trigger the define event
+        _trigger.call(definition, 'define', definition);
+        
+        // return the definition
+        return definition;
     }
     
     function _module() {

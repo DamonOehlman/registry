@@ -1,7 +1,7 @@
 var registry = require('../registry.common'),
     expect = require('expect.js');
 
-describe('notification (accept) tests', function() {
+describe('notification (create) tests', function() {
     before(function() {
         registry.define('test.evented', function() {
             return {
