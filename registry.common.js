@@ -1,7 +1,7 @@
 var wildcard = require('wildcard'),
     matchme = require('matchme');
     
-// registry 0.1.3
+// registry 0.1.4
 // ────────────────────────────────────────────────────────────────────────────────────────
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
