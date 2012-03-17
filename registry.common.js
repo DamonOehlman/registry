@@ -102,15 +102,21 @@ var wildcard = require('wildcard'),
                 // create the new object or re-use the instance if it's there
                 newObject = this.instance || this.constructor.apply(null, arguments);
                 
-                // assign the prototype
-                newObject.__proto__ = this._prototype;
+                // if the new object has successfully been created, and is of type object
+                // then assign the prototype
+                if (typeof newObject == 'object') {
+                    newObject.__proto__ = this._prototype;
+                }
                 
-                // trigger the create
-                _trigger.call(newObject, 'create', this);
+                // if we have the new object, then trigger the create event
+                if (typeof newObject != 'undefined') {
+                    // trigger the create
+                    _trigger.call(newObject, 'create', this);
     
-                // if the definition is a singleton and the instance is not yet assigned, then do that now
-                if (this._singleton && (! this.instance)) {
-                    this.instance = newObject;
+                    // if the definition is a singleton and the instance is not yet assigned, then do that now
+                    if (this._singleton && (! this.instance)) {
+                        this.instance = newObject;
+                    }
                 }
             } 
     
