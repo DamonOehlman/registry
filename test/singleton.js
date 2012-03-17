@@ -30,4 +30,15 @@ describe('singleton tests', function() {
         expect(instance).to.be.ok();
         expect(instance.name).to.equal('Ted');
     });
+    
+    it('defines modules as singletons', function() {
+        var def = registry.module('test.module', function() {
+            return {
+                name: 'Test Module'
+            };
+        });
+        
+        expect(def).to.be.ok();
+        expect(def.singleton).to.be.ok();
+    });
 });

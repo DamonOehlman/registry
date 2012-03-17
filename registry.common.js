@@ -222,6 +222,16 @@ var wildcard = require('wildcard'),
         return definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
     }
     
+    function _module() {
+        var definition = _define.apply(null, arguments);
+        
+        // set the definition as a singleton
+        definition.singleton();
+        
+        // return the new definition
+        return definition;
+    }
+    
     // ## registry.scaffold
     // The scaffold function is used to define a prototype rather than a module pattern style 
     // constructor function.  Internally the registry creates a define call and creates an 
@@ -257,6 +267,7 @@ var wildcard = require('wildcard'),
     registry.define = _define;
     registry.find = registry;
     registry.scaffold = _scaffold;
+    registry.module = _module;
     registry.undef = _undef;
     
     // event handling
