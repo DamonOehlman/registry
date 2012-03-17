@@ -39,6 +39,14 @@ RegistryDefinition.prototype = {
             // if the new object has successfully been created, and is of type object
             // then assign the prototype
             if (typeof newObject == 'object') {
+                // copy any methods from the object prototype into this prototype
+                if (newObject.__proto__ !== this._prototype) {
+                    for (var key in newObject.__proto__) {
+                        this._prototype[key] = newObject.__proto__[key];
+                    }
+                }
+                
+                // retarget the new object prototype
                 newObject.__proto__ = this._prototype;
             }
             
