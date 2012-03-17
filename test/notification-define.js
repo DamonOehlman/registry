@@ -16,6 +16,11 @@ describe('notification (define) tests', function() {
     it('can receive an update when a new definition is created', function(done) {
         
         function handleDefine(def) {
+            // ensure that the extends call has been appled before
+            // the event has been triggered
+            expect(def._prototype).to.be.ok();
+            expect(def._prototype.hasValidPrototype).to.be.ok();
+           
             registry.unbind('define:test', handleDefine);
             done();
         }
@@ -26,6 +31,9 @@ describe('notification (define) tests', function() {
             return {
                 test: true
             };
+        })
+        .extend({
+            hasValidPrototype: true
         });
     });
 });
