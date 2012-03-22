@@ -93,9 +93,10 @@
     
     RegistryDefinition.prototype = {
         create: function() {
-            var newObject;
+            var newObject = this.instance;
             
-            if (this.constructor || this.instance) {
+            // if the object has not already been created, then create the new instance
+            if ((! newObject) && this.constructor) {
                 // create the new object or re-use the instance if it's there
                 newObject = this.instance || this.constructor.apply(null, arguments);
                 
@@ -241,6 +242,17 @@
         return definition;
     }
     
+    function _fn(namespace, handler) {
+        // create the definition
+        var definition = _define(namespace);
+        
+        // set the instance of the definition to the handler
+        definition.instance = handler;
+        
+        // return the definition
+        return definition;
+    }
+    
     function _module() {
         var definition = _define.apply(null, arguments);
         
@@ -285,6 +297,7 @@
     
     registry.define = _define;
     registry.find = registry;
+    registry.fn = _fn;
     registry.scaffold = _scaffold;
     registry.module = _module;
     registry.undef = _undef;

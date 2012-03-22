@@ -30,9 +30,10 @@ function RegistryDefinition(namespace, constructor, attributes) {
 
 RegistryDefinition.prototype = {
     create: function() {
-        var newObject;
+        var newObject = this.instance;
         
-        if (this.constructor || this.instance) {
+        // if the object has not already been created, then create the new instance
+        if ((! newObject) && this.constructor) {
             // create the new object or re-use the instance if it's there
             newObject = this.instance || this.constructor.apply(null, arguments);
             

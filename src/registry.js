@@ -43,6 +43,17 @@
         return definition;
     }
     
+    function _fn(namespace, handler) {
+        // create the definition
+        var definition = _define(namespace);
+        
+        // set the instance of the definition to the handler
+        definition.instance = handler;
+        
+        // return the definition
+        return definition;
+    }
+    
     function _module() {
         var definition = _define.apply(null, arguments);
         
@@ -87,6 +98,7 @@
     
     registry.define = _define;
     registry.find = registry;
+    registry.fn = _fn;
     registry.scaffold = _scaffold;
     registry.module = _module;
     registry.undef = _undef;
