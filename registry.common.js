@@ -1,7 +1,7 @@
 var wildcard = require('wildcard'),
     matchme = require('matchme');
     
-// registry 0.1.4
+// registry 0.2.0
 // ────────────────────────────────────────────────────────────────────────────────────────
 // Experimental namespaced IoC container
 // ────────────────────────────────────────────────────────────────────────────────────────
@@ -133,20 +133,15 @@ var wildcard = require('wildcard'),
         },
         
         extend: function(proto) {
-            if (! this._prototype) {
-                return this.prototype(proto);
-            }
-            else {
-                for (var key in proto) {
-                    // if none of the descendant prototypes have implemented this member, then copy
-                    // it across to the new prototype
-                    if (! this._prototype[key]) {
-                        this._prototype[key] = proto[key];
-                    }
+            for (var key in proto) {
+                // if none of the descendant prototypes have implemented this member, then copy
+                // it across to the new prototype
+                if (! this._prototype[key]) {
+                    this._prototype[key] = proto[key];
                 }
-                
-                return this;
             }
+            
+            return this;
         },
         
         matches: function(test) {
@@ -154,9 +149,6 @@ var wildcard = require('wildcard'),
         },
         
         prototype: function(proto) {
-            // create a new instance of the prototype
-            this._prototype = {};
-            
             // add the base prototype to the new prototype to satisfy instance of calls
             this._prototype.__proto__ = proto;
             
@@ -238,6 +230,7 @@ var wildcard = require('wildcard'),
         
         // trigger the define event (use setTimeout to allow other assignments to complete)
         setTimeout(function() {
+            // trigger the event
             _trigger.call(definition, 'define', definition);
         }, 0);
         

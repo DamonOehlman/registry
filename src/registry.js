@@ -36,6 +36,7 @@
         
         // trigger the define event (use setTimeout to allow other assignments to complete)
         setTimeout(function() {
+            // trigger the event
             _trigger.call(definition, 'define', definition);
         }, 0);
         

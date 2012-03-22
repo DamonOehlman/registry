@@ -25,7 +25,7 @@ describe('notification (define) tests', function() {
             done();
         }
         
-        registry.bind('define:test', handleDefine);
+        registry.bind('define:test.definition', handleDefine);
         
         registry.define('test.definition', function() {
             return {

@@ -67,20 +67,15 @@ RegistryDefinition.prototype = {
     },
     
     extend: function(proto) {
-        if (! this._prototype) {
-            return this.prototype(proto);
-        }
-        else {
-            for (var key in proto) {
-                // if none of the descendant prototypes have implemented this member, then copy
-                // it across to the new prototype
-                if (! this._prototype[key]) {
-                    this._prototype[key] = proto[key];
-                }
+        for (var key in proto) {
+            // if none of the descendant prototypes have implemented this member, then copy
+            // it across to the new prototype
+            if (! this._prototype[key]) {
+                this._prototype[key] = proto[key];
             }
-            
-            return this;
         }
+        
+        return this;
     },
     
     matches: function(test) {
@@ -88,9 +83,6 @@ RegistryDefinition.prototype = {
     },
     
     prototype: function(proto) {
-        // create a new instance of the prototype
-        this._prototype = {};
-        
         // add the base prototype to the new prototype to satisfy instance of calls
         this._prototype.__proto__ = proto;
         
