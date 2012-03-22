@@ -1,7 +1,7 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js');
-
 describe('function tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js');
+
     it('can define a function handler', function() {
         var def = registry.fn('fn.test', function(input) {
             return input + '-out';

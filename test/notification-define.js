@@ -1,7 +1,7 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js');
-
 describe('notification (define) tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js');
+
     function dummyFn() {
     }
     

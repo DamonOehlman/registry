@@ -1,7 +1,3 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js'),
-    person;
-    
 function Person(name) {
     this.name = name; 
 }
@@ -19,6 +15,10 @@ function Author(name) {
 }
 
 describe('prototype extension tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js'),
+        person;
+
     it('can scaffold a new prototype', function() {
         var def = registry.scaffold('person', Person).prototype(Person.prototype);
         

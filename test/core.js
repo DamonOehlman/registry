@@ -1,6 +1,3 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js');
-
 function PingPong() {
     if (!(this instanceof PingPong)) return new PingPong();
 }
@@ -10,6 +7,9 @@ PingPong.prototype.ping = function() {
 };
 
 describe('core tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js');
+
     function checkPonger(ponger) {
         expect(ponger).to.be.ok();
         expect(typeof ponger).to.equal('object');

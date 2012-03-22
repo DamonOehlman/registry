@@ -1,7 +1,7 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js');
-
 describe('attribute tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js');
+
     it('can define a type with attributes (drivable.humvee)', function() {
         var def = registry.define('vehicle.humvee', function() {
             return {

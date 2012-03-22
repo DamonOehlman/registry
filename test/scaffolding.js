@@ -1,7 +1,3 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js'),
-    vehicle;
-    
 function PushCart() {
     this.wheels = 4;
 }
@@ -13,6 +9,10 @@ PushCart.prototype = {
 };
 
 describe('scaffolding tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js'),
+        vehicle;
+
     it('can scaffold a new prototype', function() {
         registry.scaffold('vehicle.pushcart', PushCart, PushCart.prototype);
     });

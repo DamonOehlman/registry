@@ -1,7 +1,7 @@
-var registry = require('../registry.common'),
-    expect = require('expect.js');
-
 describe('existing object tests', function() {
+    var registry = require('../registry.common'),
+        expect = require('expect.js');
+
     it('can define an instance', function() {
         registry.define('config', {
             test: true
