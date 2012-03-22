@@ -20,7 +20,7 @@ describe('prototype extension tests', function() {
         person;
 
     it('can scaffold a new prototype', function() {
-        var def = registry.scaffold('person', Person).prototype(Person.prototype);
+        var def = registry.scaffold('person', Person);
         
         expect(def).to.be.ok();
         expect(def._prototype).to.be.ok();
@@ -39,7 +39,6 @@ describe('prototype extension tests', function() {
     
     it('can scaffold an extended prototype', function() {
         var def = registry.scaffold('person.author', Author)
-                    .prototype(Person.prototype)
                     .extend({
                         writeBook: function(title) {
                             this.books.push(title);

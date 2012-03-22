@@ -12,8 +12,8 @@ describe('attribute tests', function() {
         }, { offroad: true, topspeed: 105 });
         
         expect(def).to.be.ok();
-        expect(def._prototype.offroad).to.be.ok();
-        expect(def._prototype.topspeed).to.equal(105);
+        expect(def.attributes.offroad).to.be.ok();
+        expect(def.attributes.topspeed).to.equal(105);
     });
     
     it('can define another type with attributes (drivable.porsche)', function() {
@@ -26,8 +26,8 @@ describe('attribute tests', function() {
         }, { topspeed: 240 });
         
         expect(def).to.be.ok();
-        expect(def._prototype.offroad).to.not.be.ok();
-        expect(def._prototype.topspeed).to.equal(240);
+        expect(def.attributes.offroad).to.not.be.ok();
+        expect(def.attributes.topspeed).to.equal(240);
     });
     
     it('can find offroad vehicles with a topspeed > 100', function() {

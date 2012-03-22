@@ -62,29 +62,37 @@
     }
 
     function RegistryDefinition(namespace, constructor, attributes) {
+        var key;
         
         // initialise members
         this.namespace = namespace;
+        
+        // initialise the attributes
+        this.attributes = attributes || {};
         
         // initialise the prototype
         this._prototype = {};
         
         // deal with the various different constructor values appropriately
         if (typeof constructor == 'function') {
+            var emptyPrototype = true;
+            
+            // update the constructor
             this.constructor = constructor;
+    
+            // check for prototype keys
+            for (key in constructor.prototype) {
+                emptyPrototype = false;
+                break;
+            }
             
             // add the prototype associated with the constructor to the current prototype
-            this._prototype.__proto__ = constructor.prototype;
+            if (! emptyPrototype) {
+                this._prototype = constructor.prototype;
+            }
         }
         else {
             this.instance = constructor;
-        }
-        
-        // copy attribute values across to the prototype
-        if (attributes) {
-            for (var key in attributes) {
-                this._prototype[key] = attributes[key];
-            }
         }
         
         // mark this as not being a singleton instance (until told otherwise)
@@ -93,25 +101,31 @@
     
     RegistryDefinition.prototype = {
         create: function() {
-            var newObject = this.instance;
+            var newObject = this.instance, key;
             
             // if the object has not already been created, then create the new instance
             if ((! newObject) && this.constructor) {
                 // create the new object or re-use the instance if it's there
                 newObject = this.instance || this.constructor.apply(null, arguments);
                 
+                // update the attribute values on the new instance
+                for (key in this.attributes) {
+                    if (typeof newObject[key] == 'undefined') {
+                        newObject[key] = this.attributes[key];
+                    }
+                }
+                
                 // if the new object has successfully been created, and is of type object
                 // then assign the prototype
                 if (typeof newObject == 'object') {
+                    var proto = Object.getPrototypeOf(newObject);
+                    
                     // copy any methods from the object prototype into this prototype
-                    if (newObject.__proto__ !== this._prototype) {
-                        for (var key in newObject.__proto__) {
-                            this._prototype[key] = newObject.__proto__[key];
+                    for (key in this._prototype) {
+                        if (typeof proto[key] == 'undefined') {
+                            proto[key] = this._prototype[key];
                         }
                     }
-                    
-                    // retarget the new object prototype
-                    newObject.__proto__ = this._prototype;
                 }
                 
                 // if we have the new object, then trigger the create event
@@ -133,7 +147,7 @@
             for (var key in proto) {
                 // if none of the descendant prototypes have implemented this member, then copy
                 // it across to the new prototype
-                if (! this._prototype[key]) {
+                if (typeof this._prototype[key] == 'undefined') {
                     this._prototype[key] = proto[key];
                 }
             }
@@ -142,14 +156,7 @@
         },
         
         matches: function(test) {
-            return matchme(this._prototype, test);
-        },
-        
-        prototype: function(proto) {
-            // add the base prototype to the new prototype to satisfy instance of calls
-            this._prototype.__proto__ = proto;
-            
-            return this;
+            return matchme(this.attributes, test) || matchme(this._prototype, test);
         },
         
         singleton: function() {
@@ -159,12 +166,11 @@
     };
 
     function RegistryResults() {
-        
+        this.items = [];
     }
     
-    RegistryResults.prototype = new Array();
     RegistryResults.prototype.create = function() {
-        return this[0] ? this[0].create.apply(this[0], arguments) : undefined;
+        return this.items[0] ? this.items[0].create.apply(this.items[0], arguments) : undefined;
     };
     
     RegistryResults.prototype.current = function() {
@@ -174,22 +180,21 @@
     RegistryResults.prototype.instances = function() {
         var results = [];
     
-        for (var ii = 0, count = this.length; ii < count; ii++) {
-            if (this[ii].instance) {
-                results[results.length] = this[ii].instance;
+        for (var ii = 0, count = this.items.length; ii < count; ii++) {
+            if (this.items[ii].instance) {
+                results[results.length] = this.items[ii].instance;
             }
         }
         
         return results;
     };
     
-    // override the filter implementation (and give one to old browsers)
     RegistryResults.prototype.filter = function(callback) {
         var results = new RegistryResults();
         
-        for (var ii = 0, count = this.length; ii < count; ii++) {
-            if (callback(this[ii])) {
-                results.push(this[ii]);
+        for (var ii = 0, count = this.items.length; ii < count; ii++) {
+            if (callback(this.items[ii])) {
+                results.items.push(this.items[ii]);
             }
         }
         
@@ -197,13 +202,27 @@
     };
 
     
+    // john resig's getPrototypeOf shim: http://ejohn.org/blog/objectgetprototypeof/
+    if ( typeof Object.getPrototypeOf !== "function" ) {
+      if ( typeof "test".__proto__ === "object" ) {
+        Object.getPrototypeOf = function(object){
+          return object.__proto__;
+        };
+      } else {
+        Object.getPrototypeOf = function(object){
+          // May break if the constructor has been tampered with
+          return object.constructor.prototype;
+        };
+      }
+    }
+    
     function registry(namespace, test) {
         var matcher = wildcard(namespace),
             results = new RegistryResults();
         
         for (var key in definitions) {
             if (matcher.match(key)) {
-                results.push(definitions[key]);
+                results.items.push(definitions[key]);
             }
         }
         
@@ -281,7 +300,7 @@
             return instance;
         });
         
-        return prototype ? def.prototype(prototype) : def;
+        return prototype ? def.extend(prototype) : def;
     }
     
     function _undef(namespace) {

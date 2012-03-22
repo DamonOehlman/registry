@@ -6,13 +6,27 @@
     //= core/definition
     //= core/results
     
+    // john resig's getPrototypeOf shim: http://ejohn.org/blog/objectgetprototypeof/
+    if ( typeof Object.getPrototypeOf !== "function" ) {
+      if ( typeof "test".__proto__ === "object" ) {
+        Object.getPrototypeOf = function(object){
+          return object.__proto__;
+        };
+      } else {
+        Object.getPrototypeOf = function(object){
+          // May break if the constructor has been tampered with
+          return object.constructor.prototype;
+        };
+      }
+    }
+    
     function registry(namespace, test) {
         var matcher = wildcard(namespace),
             results = new RegistryResults();
         
         for (var key in definitions) {
             if (matcher.match(key)) {
-                results.push(definitions[key]);
+                results.items.push(definitions[key]);
             }
         }
         
@@ -90,7 +104,7 @@
             return instance;
         });
         
-        return prototype ? def.prototype(prototype) : def;
+        return prototype ? def.extend(prototype) : def;
     }
     
     function _undef(namespace) {

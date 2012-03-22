@@ -14,7 +14,7 @@ describe('scaffolding tests', function() {
         vehicle;
 
     it('can scaffold a new prototype', function() {
-        registry.scaffold('vehicle.pushcart', PushCart, PushCart.prototype);
+        registry.scaffold('vehicle.pushcart', PushCart);
     });
     
     it('can create a new instance of the scaffolded function', function() {
@@ -23,7 +23,7 @@ describe('scaffolding tests', function() {
     });
     
     it('has created an object with a drive method on the prototype', function() {
-        expect(typeof vehicle.__proto__.drive).to.equal('function');
+        expect(typeof vehicle.drive).to.equal('function');
         expect(vehicle.drive()).to.equal('driving a pushcart');
     });
     
