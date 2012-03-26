@@ -248,15 +248,10 @@ var wildcard = require('wildcard'),
         var definition = definitions[namespace] = new RegistryDefinition(namespace, constructor, attributes);
         
         // trigger the define event (use setTimeout to allow other assignments to complete)
-        /*
         setTimeout(function() {
             // trigger the event
             _trigger.call(definition, 'define', definition);
         }, 0);
-        */
-        
-        // trigger the definition
-        _trigger.call(definition, 'define', definition);
         
         // return the definition
         return definition;
