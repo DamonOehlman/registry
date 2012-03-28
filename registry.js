@@ -318,5 +318,5 @@
     registry.bind = _bind;
     registry.unbind = _unbind;
     
-    (typeof module != "undefined" && module.exports) ? (module.exports = registry) : (typeof define != "undefined" ? (define("registry", [], function() { return registry; })) : (glob.registry = registry));
+    (typeof module != "undefined" && module.exports) ? (module.exports = registry) : (glob.registry = registry);
 })(this);
