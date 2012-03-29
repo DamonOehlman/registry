@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 build:
-	@interleave src
+	@interleave src --package
 
 test:
 	@mocha --reporter spec
