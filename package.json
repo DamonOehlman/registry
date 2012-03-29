@@ -4,7 +4,7 @@
   "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
   "tags": [ "ioc" ],
   "version": "0.2.0",
-  "main": "./registry.common.js",
+  "main": "./pkg/cjs/registry",
 
   "engines": {
     "node": ">= 0.4.x < 0.7.0"

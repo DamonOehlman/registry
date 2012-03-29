@@ -1,5 +1,5 @@
 describe('function tests', function() {
-    var registry = require('../registry.common'),
+    var registry = require('../pkg/cjs/registry'),
         expect = require('expect.js');
 
     it('can define a function handler', function() {

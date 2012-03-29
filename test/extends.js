@@ -15,7 +15,7 @@ function Author(name) {
 }
 
 describe('prototype extension tests', function() {
-    var registry = require('../registry.common'),
+    var registry = require('../pkg/cjs/registry'),
         expect = require('expect.js'),
         person;
 

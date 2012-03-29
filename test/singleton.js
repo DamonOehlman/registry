@@ -1,5 +1,5 @@
 describe('singleton tests', function() {
-    var registry = require('../registry.common'),
+    var registry = require('../pkg/cjs/registry'),
         expect = require('expect.js');
 
     it('can define a singleton', function() {
