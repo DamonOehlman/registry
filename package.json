@@ -3,7 +3,7 @@
   "description": "Experimental namespaced IoC container",
   "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
   "tags": [ "ioc" ],
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "./pkg/cjs/registry",
 
   "engines": {

@@ -55,7 +55,6 @@ function _unbind(pattern, handler) {
         }
     } 
 }
-
 function RegistryDefinition(namespace, constructor, attributes) {
     var key;
     
@@ -159,7 +158,6 @@ RegistryDefinition.prototype = {
         return this;
     }
 };
-
 function RegistryResults() {
     this.items = [];
 }
@@ -195,7 +193,6 @@ RegistryResults.prototype.filter = function(callback) {
     
     return results;
 };
-
 
 // john resig's getPrototypeOf shim: http://ejohn.org/blog/objectgetprototypeof/
 if ( typeof Object.getPrototypeOf !== "function" ) {
