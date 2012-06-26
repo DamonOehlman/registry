@@ -2,34 +2,31 @@
   "name": "registry",
   "description": "Experimental namespaced IoC container",
   "author": "Damon Oehlman <damon.oehlman@sidelab.com>",
-  "tags": [ "ioc" ],
-  "version": "0.2.1",
+  "tags": [
+    "ioc"
+  ],
+  "version": "0.2.2",
   "main": "./pkg/cjs/registry",
-
   "engines": {
     "node": ">= 0.4.x < 0.9.0"
   },
-  
   "dependencies": {
     "matchme": "0.1.x",
     "wildcard": "*"
   },
-
   "devDependencies": {
     "expect.js": "0.1.x",
     "mocha": "*"
   },
-
   "repository": {
     "type": "git",
     "url": "git://github.com/DamonOehlman/register.git"
   },
-  
   "bugs": {
     "url": "http://github.com/DamonOehlman/register/issues"
   },
-  
-  "scripts": { "test": "mocha --reporter spec" },
-  
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
   "contributors": []
 }
