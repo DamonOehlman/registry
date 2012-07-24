@@ -1,6 +1,5 @@
-var wildcard = require('wildcard'),
-    matchme = require('matchme');
 
+// req: wildcard,matchme
 var definitions = {};
     
 var _listeners = {},
@@ -311,5 +310,3 @@ registry.undef = _undef;
 // event handling
 registry.bind = _bind;
 registry.unbind = _unbind;
-
-module.exports = registry;

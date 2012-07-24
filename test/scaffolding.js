@@ -9,7 +9,7 @@ PushCart.prototype = {
 };
 
 describe('scaffolding tests', function() {
-    var registry = require('../pkg/cjs/registry'),
+    var registry = require('../dist/commonjs/registry'),
         expect = require('expect.js'),
         vehicle;
 

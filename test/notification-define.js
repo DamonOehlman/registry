@@ -1,5 +1,5 @@
 describe('notification (define) tests', function() {
-    var registry = require('../pkg/cjs/registry'),
+    var registry = require('../dist/commonjs/registry'),
         expect = require('expect.js');
 
     function dummyFn() {

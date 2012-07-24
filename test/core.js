@@ -7,7 +7,7 @@ PingPong.prototype.ping = function() {
 };
 
 describe('core tests', function() {
-    var registry = require('../pkg/cjs/registry'),
+    var registry = require('../dist/commonjs/registry'),
         expect = require('expect.js');
 
     function checkPonger(ponger) {

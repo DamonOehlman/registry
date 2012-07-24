@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 
 build:
-	@interleave src --package
-	@bake pkg/oldschool/registry.js --output test/browser/lib
+	@interleave build src/*.js --wrap
+	@bake dist/glob/registry.js --output test/browser/lib
 
 test:
 	@mocha --reporter spec

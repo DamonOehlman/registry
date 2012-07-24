@@ -1,5 +1,5 @@
 describe('attribute tests', function() {
-    var registry = require('../pkg/cjs/registry'),
+    var registry = require('../dist/commonjs/registry'),
         expect = require('expect.js');
 
     it('can define a type with attributes (drivable.humvee)', function() {
