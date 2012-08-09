@@ -15,4 +15,10 @@ Primarily, Registry has been designed for use in the browser but will also work 
 
 ## Example Usage
 
-At the moment, the tests contain some of the best examples of how Registry can be used, but full documentation will be completed one day...
+At the moment, the tests contain some of the best examples of how Registry can be used, but you should also check out the docs (see below).
+
+## Registry Documentation
+
+Emerging documentation is available at:
+
+<http://registry.readthedocs.org/>
