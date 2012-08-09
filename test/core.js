@@ -27,8 +27,8 @@ describe('core tests', function() {
     });
     
     it('can create a new instance from the test definition', function() {
-        var instance = registry('test.core').create();
-        
+        var instance = registry('test.core');
+
         expect(instance).to.be.ok();
         expect(typeof instance).to.equal('string');
         expect(instance).to.equal('test');
@@ -49,14 +49,14 @@ describe('core tests', function() {
     });
     
     it('can create a new pingpong object', function() {
-        checkPonger(registry('pingpong.type1').create());
+        checkPonger(registry('pingpong.type1'));
     });
     
     it('can create a new pingpong object by looking for the generic implementation', function() {
-        checkPonger(registry('pingpong').create());
+        checkPonger(registry('pingpong'));
     });
     
     it('can create a new pingpong object using the general implementation (with wildcards)', function() {
-        checkPonger(registry('pingpong.*').create());
+        checkPonger(registry('pingpong.*'));
     });
 });

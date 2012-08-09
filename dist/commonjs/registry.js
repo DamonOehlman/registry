@@ -165,36 +165,67 @@ function RegistryResults() {
     this.items = [];
 }
 
-RegistryResults.prototype.create = function() {
-    return this.items[0] ? this.items[0].create.apply(this.items[0], arguments) : undefined;
-};
+RegistryResults.prototype = {
+    create: function() {
+        return this.items[0] ? this.items[0].create.apply(this.items[0], arguments) : undefined;
+    },
 
-RegistryResults.prototype.current = function() {
-    return this.instances()[0];
-};
+    current: function() {
+        return this.instances()[0];
+    },
 
-RegistryResults.prototype.instances = function() {
-    var results = [];
+    having: function(matchText, opts) {
+        var results = this;
 
-    for (var ii = 0, count = this.items.length; ii < count; ii++) {
-        if (this.items[ii].instance) {
-            results[results.length] = this.items[ii].instance;
+        // ensure we have options
+        opts = opts || {};
+
+        // if we have been passed a matchme test string, then filter the results
+        if (typeof matchText != 'undefined') {
+            results = results.filter(function(item) {
+                return item.matches(matchText);
+            });
         }
-    }
-    
-    return results;
-};
 
-RegistryResults.prototype.filter = function(callback) {
-    var results = new RegistryResults();
-    
-    for (var ii = 0, count = this.items.length; ii < count; ii++) {
-        if (callback(this.items[ii])) {
-            results.items.push(this.items[ii]);
+        // find valid instances
+        // NOTE: if the alwaysCreate opt is provided, then we won't return an existing instance
+        var instantiated = results.filter(function(item) {
+            return (! opts.alwaysCreate) && item.instance;
+        });
+
+        // if we have a valid instance, then return it otherwise create a new instance
+        if (instantiated.length > 0) {
+            return instantiated.items[0].instance;
         }
+        else {
+            return results.create.apply(results, opts.args || []);
+        }
+    },
+
+    instances: function() {
+        var results = [];
+
+        for (var ii = 0, count = this.items.length; ii < count; ii++) {
+            if (this.items[ii].instance) {
+                results[results.length] = this.items[ii].instance;
+            }
+        }
+
+        return results;
+    },
+
+    // IE <= 8 compat
+    filter: function(callback) {
+        var results = new RegistryResults();
+        
+        for (var ii = 0, count = this.items.length; ii < count; ii++) {
+            if (callback(this.items[ii])) {
+                results.items.push(this.items[ii]);
+            }
+        }
+        
+        return results;
     }
-    
-    return results;
 };
 
 // john resig's getPrototypeOf shim: http://ejohn.org/blog/objectgetprototypeof/
@@ -211,24 +242,20 @@ if ( typeof Object.getPrototypeOf !== "function" ) {
   }
 }
 
-function registry(namespace, test) {
-    var matcher = wildcard(namespace),
-        results = new RegistryResults();
-    
-    for (var key in definitions) {
-        if (matcher.match(key)) {
-            results.items.push(definitions[key]);
-        }
-    }
-    
-    // if we have been passed a matchme test string, then filter the results
-    if (typeof test != 'undefined') {
-        results = results.filter(function(item) {
-            return item.matches(test);
-        });
-    }
-    
-    return results;
+function registry(namespace, opts) {
+    var results = _matches(namespace);
+
+    // ensure we have opts
+    opts = opts || {};
+
+    // return the results that match the required condition
+    return results.having(opts.having, opts);
+}
+
+function _create(namespace) {
+    var results = registry.matches(namespace);
+
+    return results.create.apply(results, Array.prototype.slice.call(arguments, 1));
 }
 
 function _define(namespace, constructor, attributes) {
@@ -260,6 +287,20 @@ function _fn(namespace, handler) {
     return definition;
 }
 
+function _matches(namespace) {
+    var matcher = wildcard(namespace),
+       results = new RegistryResults();
+
+    // look for results
+    for (var key in definitions) {
+        if (matcher.match(key)) {
+            results.items.push(definitions[key]);
+        }
+    }
+
+    return results;
+}
+
 function _module() {
     var definition = _define.apply(null, arguments);
     
@@ -271,9 +312,9 @@ function _module() {
 }
 
 // ## registry.scaffold
-// The scaffold function is used to define a prototype rather than a module pattern style 
-// constructor function.  Internally the registry creates a define call and creates an 
-// anonymous function that creates a new instance of the prototype via the constructor 
+// The scaffold function is used to define a prototype rather than a module pattern style
+// constructor function.  Internally the registry creates a define call and creates an
+// anonymous function that creates a new instance of the prototype via the constructor
 // and ensures that the prototype has be assigned to the object
 function _scaffold(namespace, constructor, prototype) {
     // if the constructor is not a function, then remap the arguments
@@ -304,10 +345,12 @@ function _undef(namespace) {
 
 registry.define = _define;
 registry.find = registry;
+registry.matching = registry.matches = _matches;
 registry.fn = _fn;
 registry.scaffold = _scaffold;
 registry.module = _module;
 registry.undef = _undef;
+registry.create = _create;
 
 // event handling
 registry.bind = _bind;

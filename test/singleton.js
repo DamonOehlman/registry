@@ -3,7 +3,7 @@ describe('singleton tests', function() {
         expect = require('expect.js');
 
     it('can define a singleton', function() {
-        registry.define('test.oneonly', function() {
+        registry.define('test.singleton.oneonly', function() {
             return {
                 name: 'Ted'
             };
@@ -11,21 +11,21 @@ describe('singleton tests', function() {
     });
     
     it('singletons only create the one instance', function() {
-        var instance1 = registry('test.oneonly').create(),
-            instance2 = registry('test.oneonly').create();
+        var instance1 = registry.create('test.singleton.oneonly'),
+            instance2 = registry.create('test.singleton.oneonly');
             
         expect(instance1 === instance2).to.be.ok();
         expect(instance1.name).to.equal('Ted');
     });
     
     it('can get the instances for singletons', function() {
-        var instances = registry('test').instances();
+        var instances = registry.matching('test').instances();
         
         expect(instances.length).to.be.above(0);
     });
     
     it('can get the first instance for singletons', function() {
-        var instance = registry('test').current();
+        var instance = registry('test.singleton');
         
         expect(instance).to.be.ok();
         expect(instance.name).to.equal('Ted');

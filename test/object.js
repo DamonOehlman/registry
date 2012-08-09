@@ -8,9 +8,9 @@ describe('existing object tests', function() {
         });
     });
     
-    it('if an existing instance was defined, then calling create does nothing', function() {
-        var config1 = registry('config').create(),
-            config2 = registry('config').create();
+    it('if an existing instance was defined, then that instance is returned on a second registry call', function() {
+        var config1 = registry('config'),
+            config2 = registry('config');
             
         expect(config1 === config2).to.be.ok();
         expect(config1.test).to.be.ok();

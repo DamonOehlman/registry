@@ -1,5 +1,5 @@
 function Person(name) {
-    this.name = name; 
+    this.name = name;
 }
 
 Person.prototype = {
@@ -27,7 +27,7 @@ describe('prototype extension tests', function() {
     });
     
     it('can create an new instance of person', function() {
-        person = registry('person').create('Tom Petty');
+        person = registry.create('person', 'Tom Petty');
         
         expect(person).to.be.ok();
     });
@@ -53,7 +53,7 @@ describe('prototype extension tests', function() {
     });
     
     it('can create a new instance of author', function() {
-        person = registry('person.author').create('Oscar Wilde');
+        person = registry.create('person.author', 'Oscar Wilde');
     });
     
     it('the author name has been initialized as per the person', function() {

@@ -18,7 +18,7 @@ describe('scaffolding tests', function() {
     });
     
     it('can create a new instance of the scaffolded function', function() {
-        vehicle = registry('vehicle.pushcart').create();
+        vehicle = registry('vehicle.pushcart');
         expect(vehicle).to.be.ok();
     });
     
@@ -44,7 +44,7 @@ describe('scaffolding tests', function() {
     });
     
     it('can create an instance of the scooter', function() {
-        vehicle = registry('vehicle.scooter').create();
+        vehicle = registry('vehicle.scooter');
         expect(vehicle).to.be.ok();
     });
     

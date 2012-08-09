@@ -12,7 +12,7 @@ describe('function tests', function() {
     });
     
     it('can access the function', function() {
-        var testFn = registry('fn.test').create();
+        var testFn = registry('fn.test');
         
         expect(testFn).to.be.ok();
         expect(typeof testFn).to.equal('function');

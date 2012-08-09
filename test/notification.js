@@ -28,7 +28,7 @@ describe('notification (create) tests', function() {
             expect(this).to.be.ok();
             expect(this.message).to.equal('hello');
             
-            // check that we have the definition of the object 
+            // check that we have the definition of the object
             expect(def).to.be.ok();
             expect(def.namespace).to.equal('test.evented');
             
@@ -38,6 +38,6 @@ describe('notification (create) tests', function() {
         
         registry.bind('create:test', handleCreate);
         
-        registry('test.evented').create();
+        registry('test.evented');
     });
 });

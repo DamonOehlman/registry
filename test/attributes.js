@@ -31,14 +31,21 @@ describe('attribute tests', function() {
     });
     
     it('can find offroad vehicles with a topspeed > 100', function() {
-        var instance = registry('vehicle', 'offroad && topspeed > 100').create();
+        var instance = registry('vehicle', { having: 'offroad && topspeed > 100' });
         
         expect(instance).to.be.ok();
         expect(instance.topspeed).to.equal(105);
     });
 
+    it('can find offroad vehicles with a topspeed > 100 (alt syntax)', function() {
+        var instance = registry.matches('vehicle').having('offroad && topspeed > 100');
+
+        expect(instance).to.be.ok();
+        expect(instance.topspeed).to.equal(105);
+    });
+
     it('can find offroad vehicles with a topspeed > 150 (there are none)', function() {
-        var instance = registry('vehicle', 'offroad && topspeed > 150').create();
+        var instance = registry('vehicle', { having: 'offroad && topspeed > 150' });
         
         expect(instance).to.not.be.ok();
     });

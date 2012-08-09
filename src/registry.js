@@ -5,38 +5,22 @@ var definitions = {};
 //= core/definition
 //= core/results
 
-// john resig's getPrototypeOf shim: http://ejohn.org/blog/objectgetprototypeof/
-if ( typeof Object.getPrototypeOf !== "function" ) {
-  if ( typeof "test".__proto__ === "object" ) {
-    Object.getPrototypeOf = function(object){
-      return object.__proto__;
-    };
-  } else {
-    Object.getPrototypeOf = function(object){
-      // May break if the constructor has been tampered with
-      return object.constructor.prototype;
-    };
-  }
+//= shim/getPrototypeOf
+
+function registry(namespace, opts) {
+    var results = _matches(namespace);
+
+    // ensure we have opts
+    opts = opts || {};
+
+    // return the results that match the required condition
+    return results.having(opts.having, opts);
 }
 
-function registry(namespace, test) {
-    var matcher = wildcard(namespace),
-        results = new RegistryResults();
-    
-    for (var key in definitions) {
-        if (matcher.match(key)) {
-            results.items.push(definitions[key]);
-        }
-    }
-    
-    // if we have been passed a matchme test string, then filter the results
-    if (typeof test != 'undefined') {
-        results = results.filter(function(item) {
-            return item.matches(test);
-        });
-    }
-    
-    return results;
+function _create(namespace) {
+    var results = registry.matches(namespace);
+
+    return results.create.apply(results, Array.prototype.slice.call(arguments, 1));
 }
 
 function _define(namespace, constructor, attributes) {
@@ -68,6 +52,20 @@ function _fn(namespace, handler) {
     return definition;
 }
 
+function _matches(namespace) {
+    var matcher = wildcard(namespace),
+       results = new RegistryResults();
+
+    // look for results
+    for (var key in definitions) {
+        if (matcher.match(key)) {
+            results.items.push(definitions[key]);
+        }
+    }
+
+    return results;
+}
+
 function _module() {
     var definition = _define.apply(null, arguments);
     
@@ -79,9 +77,9 @@ function _module() {
 }
 
 // ## registry.scaffold
-// The scaffold function is used to define a prototype rather than a module pattern style 
-// constructor function.  Internally the registry creates a define call and creates an 
-// anonymous function that creates a new instance of the prototype via the constructor 
+// The scaffold function is used to define a prototype rather than a module pattern style
+// constructor function.  Internally the registry creates a define call and creates an
+// anonymous function that creates a new instance of the prototype via the constructor
 // and ensures that the prototype has be assigned to the object
 function _scaffold(namespace, constructor, prototype) {
     // if the constructor is not a function, then remap the arguments
@@ -112,10 +110,12 @@ function _undef(namespace) {
 
 registry.define = _define;
 registry.find = registry;
+registry.matching = registry.matches = _matches;
 registry.fn = _fn;
 registry.scaffold = _scaffold;
 registry.module = _module;
 registry.undef = _undef;
+registry.create = _create;
 
 // event handling
 registry.bind = _bind;
