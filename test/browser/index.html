@@ -2,11 +2,13 @@
 <head>
   <meta charset="utf-8">
   <title>Mocha Tests</title>
-  <link rel="stylesheet" href="lib/mocha.css" />
-  <script src="lib/registry.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://raw.github.com/visionmedia/mocha/master/mocha.css" />
+  <script src="https://raw.github.com/DamonOehlman/wildcard/master/dist/glob/wildcard.js"></script>
+  <script src="https://raw.github.com/DamonOehlman/matchme/master/dist/glob/matchme.js"></script>
+  <script src="../../dist/glob/registry.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="lib/expect.js"></script>
-  <script src="lib/mocha.js"></script>
+  <script src="https://raw.github.com/visionmedia/mocha/master/mocha.js"></script>
   <script>mocha.setup('bdd');</script>
   <script>
   var reLastPart = /.*\/(.*)$/;

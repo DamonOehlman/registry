@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "matchme": "0.1.x",
-    "wildcard": "*"
+    "wildcard": "0.1.x"
   },
   "devDependencies": {
     "expect.js": "0.1.x",
