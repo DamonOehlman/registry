@@ -1,0 +1,4 @@
+.. _Node.js: http://nodejs.org
+.. _IIFE: http://benalman.com/news/2010/11/immediately-invoked-function-expression/
+.. _eve: https://github.com/DmitryBaranovskiy/eve
+.. _wildcard: https://github.com/DamonOehlman/wildcard

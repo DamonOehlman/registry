@@ -75,7 +75,7 @@ RegistryDefinition.prototype = {
                     this.instance = newObject;
                 }
             }
-        } 
+        }
 
         return newObject;
     },
@@ -93,6 +93,10 @@ RegistryDefinition.prototype = {
     },
     
     matches: function(test) {
+        if (typeof matchme == 'undefined') {
+            throw new Error('matchme library required for matches functionality');
+        }
+
         return matchme(this.attributes, test) || matchme(this._prototype, test);
     },
     
