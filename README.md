@@ -1,24 +1,18 @@
 # Registry
 
-It's a bucket. A Javascript bucket.  A big Javascript bucket for defining your modules, classes, configuration objects, etc.  While we could throw around different acronyms like IoC, AOP and the like, nothing quite fits exactly how registry works.  But they do give you a feel for the concepts and inspiration behind the project.
+Registry is designed to be a useful helper for managing definitions of JS modules, classes, functions, etc.  It provides the ability to define a "thing" using a string identifier and then
+retrieve it at later date using [wildcard](/DamonOehlman/wildcard) matching.
 
 <a href="http://travis-ci.org/#!/DamonOehlman/registry"><img src="https://secure.travis-ci.org/DamonOehlman/registry.png" alt="Build Status"></a>
 
-## The Importance of Namespaces
+## Why Use Registry?
 
-Registry uses namespaces to pragmatically define the purpose of a class, module or function.  Items are stored in the registry under a namespace and can be accessed either directly by the namespace, or by [wildcard](https://github.com/DamonOehlman/wildcard) matches.
+Registry attempts to provide some of the benefits that you find using an [IoC](http://en.wikipedia.org/wiki/Inversion_of_control) in an OO programming environment, but does not force OO patterns into JS like many other Class Helper libraries.
 
-Consider the following example:
+When using registry you should be able to define things in much the same way you are used to.  You simply provide them a name that can be wildcard matched in a similar way to [eve](/DmitryBaranovskiy/eve) and retrieved later.  Using this technique you can either specifically target a particular thing by using a specific name or a more generalized instance using a more generalized namespace.
 
-```js
-// define a (pretend) loader that can read from a local files 
-registry.define('loader.file', function() {
-    return {
-        load: function(target) {
-        }
-    };
-});
+Primarily, Registry has been designed for use in the browser but will also work quite happily in a CommonJS environment (such as Node).
 
-// create a new loader instance (using a wildcard )
-var loader = registry('loader').create();
-```
+## Example Usage
+
+At the moment, the tests contain some of the best examples of how Registry can be used, but full documentation is in progress.
