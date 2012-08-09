@@ -25,9 +25,9 @@ RegistryResults.prototype = {
         }
 
         // find valid instances
-        // NOTE: if the alwaysCreate opt is provided, then we won't return an existing instance
+        // NOTE: if the newInstance option is provided, then we won't return an existing instance
         var instantiated = results.filter(function(item) {
-            return (! opts.alwaysCreate) && item.instance;
+            return (! opts.newInstance) && item.instance;
         });
 
         // if we have a valid instance, then return it otherwise create a new instance
