@@ -70,8 +70,8 @@ pygments_style = 'trac'
 
 # -- Repository options used in the docstar templates --------------------------
 
-github_url = 'https://github.com/DamonOehlman/register'
-bitbucket_url = 'https://github.com/DamonOehlman/register'
+github_url = 'https://github.com/DamonOehlman/registry'
+bitbucket_url = 'https://github.com/DamonOehlman/registry'
 
 # -- Options for HTML output ---------------------------------------------------
 

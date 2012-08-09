@@ -20,10 +20,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/DamonOehlman/register.git"
+    "url": "git://github.com/DamonOehlman/registry.git"
   },
   "bugs": {
-    "url": "http://github.com/DamonOehlman/register/issues"
+    "url": "http://github.com/DamonOehlman/regsitry/issues"
   },
   "scripts": {
     "test": "mocha --reporter spec"
